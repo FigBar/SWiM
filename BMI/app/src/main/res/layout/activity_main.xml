@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".MainActivity">
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:srcCompat="@drawable/bmi_ranges"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" android:id="@+id/bmiRangeView"
+            android:contentDescription="@string/appimage"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline"
+                                                android:orientation="horizontal"
+                                                app:layout_constraintGuide_percent="0.3"/>
+    <TextView
+            android:text="@string/mass_kg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/massET"/>
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/massET"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.7" android:autofillHints="" android:hint="@string/provide_your_mass"/>
+    <Button
+            android:text="@string/count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/countButton"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/Widget.AppCompat.Button" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline3"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline2"
+                                                android:orientation="horizontal"
+                                                app:layout_constraintGuide_percent="0.45"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline4"
+                                                android:orientation="horizontal"
+                                                app:layout_constraintGuide_percent="0.6"/>
+    <TextView
+            android:text="@string/height_cm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline2" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/heightET"
+    />
+    <EditText
+            android:layout_width="0dp"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/heightET" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline2" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline4" android:layout_height="wrap_content"
+            app:layout_constraintVertical_bias="0.7" android:hint="@string/provide_your_height"/>
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/guideline3"
+                                                android:orientation="horizontal"
+                                                app:layout_constraintGuide_percent="0.9"/>
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="133dp"
+            android:id="@+id/resultTV" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="@+id/guideline4"
+            android:textAlignment="center" android:textSize="24sp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/countButton"/>
+    <TextView
+            android:text="@string/your_bmi"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:id="@+id/bmiLabelTV" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/resultTV" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline4" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:textAlignment="center"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

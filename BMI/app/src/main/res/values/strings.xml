@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BMI</string>
+    <string name="mass_kg">Mass[kg]</string>
+    <string name="count">Count</string>
+    <string name="appimage">appImage</string>
+    <string name="height_cm">Height[cm]</string>
+    <string name="provide_your_mass">Provide your mass</string>
+    <string name="provide_your_height">Provide your height</string>
+    <string name="your_bmi">Your BMI</string>
+</resources>
