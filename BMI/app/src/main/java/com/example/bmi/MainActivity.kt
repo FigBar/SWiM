@@ -4,67 +4,85 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import android.widget.TextView
+import android.view.View
+import android.widget.EditText
+import android.widget.Toast
 import com.example.bmi.logic.BmiForKgCm
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.IllegalArgumentException
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class MainActivity : AppCompatActivity() {
+
+    private val bmiCalculator = BmiForKgCm(0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val bmi = BmiForKgCm(0, 0)
-        countButton.isEnabled = false
-
         massET.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                countButton.isEnabled = !s.toString().trim().isEmpty() && !heightET.text.isEmpty()
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 resultTV.text = ""
+                categoryTV.text = ""
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
 
         heightET.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                countButton.isEnabled = !s.toString().trim().isEmpty() && !massET.text.isEmpty()
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 resultTV.text = ""
+                categoryTV.text = ""
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
 
-        countButton.setOnClickListener {
-            var bmiResult: Double?
-            try {
-                bmi.mass = massET.text.toString().toInt()
-                bmi.height = heightET.text.toString().toInt()
-                bmiResult = bmi.countBmi()
-            } catch (e: IllegalArgumentException) {
-                bmiResult = null
-            }
+    }
 
-            val resText =
-                if (bmiResult != null) String.format("%.1f", bmiResult) else "The values are to small or to big"
-            resultTV.text = resText
+    fun onCountClicked(view: View) {
+        val mass = getValidBmiParameterForCalculations(massET, "mass") ?: return
+        val height = getValidBmiParameterForCalculations(heightET, "height") ?: return
+
+        bmiCalculator.mass = mass
+        bmiCalculator.height = height
+
+        try {
+            val bmiResult = bmiCalculator.countBmi()
+            displayBmiResult(bmiResult)
+            setCategory(bmiResult)
+        } catch (exc: IllegalArgumentException) {
+            Toast.makeText(this, "Provide valid parameters!", Toast.LENGTH_SHORT).show()
+
         }
+    }
 
+    private fun getValidBmiParameterForCalculations(src: EditText, paramType: String): Int? {
+        if (src.text.isEmpty()) {
+            Toast.makeText(this, "Provide $paramType!", Toast.LENGTH_SHORT).show()
+            return null
+        }
+        return src.text.toString().toInt()
+    }
 
+    private fun displayBmiResult(bmiResult: Double) {
+        resultTV.text = String.format("%.2f", bmiResult)
+    }
+
+    private fun setColor() {
+
+    }
+
+    private fun setCategory(bmiResult: Double?) {
+        categoryTV.text = when {
+            bmiResult == null -> ""
+            bmiResult < 18.5 -> "UNDERWEIGHT"
+            bmiResult < 25 -> "HEALTHY"
+            bmiResult < 30 -> "OVERWEIGHT"
+            bmiResult < 35 -> "OBESITY"
+            else -> "SEVERE OBESITY"
+        }
     }
 }
