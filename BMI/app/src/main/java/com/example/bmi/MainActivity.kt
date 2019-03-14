@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         return when (item?.itemId) {
             R.id.unit_change -> onUnitChanged(item)
+            R.id.about -> onAboutSelected()
             else -> super.onOptionsItemSelected(item)
 
         }
@@ -70,14 +71,45 @@ class MainActivity : AppCompatActivity() {
         return true
 
     }
+    fun onAboutSelected() : Boolean {
+        val aboutIntent = Intent(this, AboutActivity::class.java)
+        startActivity(aboutIntent)
+        return true
+    }
 
     fun goToInfoActivity(view: View) {
-        val intent = Intent(this, DetailBmiActivity::class.java)
+        val infoIntent = Intent(this, DetailBmiActivity::class.java)
         val bmiBundle = Bundle()
         bmiBundle.putString("BMI_RESULT", resultTV.text.toString())
         bmiBundle.putString("BMI_CATEGORY", categoryTV.text.toString())
-        intent.putExtras(bmiBundle)
-        startActivity(intent)
+        infoIntent.putExtras(bmiBundle)
+        startActivity(infoIntent)
+    }
+
+
+    private fun onUnitChanged(menuItem: MenuItem): Boolean {
+        areUnitsSwitched = !areUnitsSwitched
+        menuItem.isChecked = areUnitsSwitched
+        changeUnits()
+        return true
+    }
+
+    private fun changeUnits() {
+        if (areUnitsSwitched) {
+            currentBmiCalculator = bmiLbIn
+            massLabel.text = getString(R.string.lb_label)
+            heightLabel.text = getString(R.string.in_label)
+
+        } else {
+            currentBmiCalculator = bmiKgCm
+            massLabel.text = getString(R.string.mass_kg)
+            heightLabel.text = getString(R.string.height_cm)
+        }
+        resultTV.text = ""
+        categoryTV.text =""
+        massET.text.clear()
+        heightET.text.clear()
+        results_segment.visibility = View.INVISIBLE
     }
 
     fun onCountClicked(view: View) {
@@ -99,27 +131,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onUnitChanged(menuItem: MenuItem): Boolean {
-        areUnitsSwitched = !areUnitsSwitched
-        menuItem.isChecked = areUnitsSwitched
-        changeUnits()
-        return true
-    }
-
-    private fun changeUnits() {
-        if (areUnitsSwitched) {
-            currentBmiCalculator = bmiLbIn
-            massLabel.text = getString(R.string.lb_label)
-            heightLabel.text = getString(R.string.in_label)
-
-        } else {
-            currentBmiCalculator = bmiKgCm
-            massLabel.text = getString(R.string.mass_kg)
-            heightLabel.text = getString(R.string.height_cm)
-        }
-
-        results_segment.visibility = View.INVISIBLE
-    }
 
     private fun getValidBmiParameterForCalculations(src: EditText, paramType: String): Int? {
         if (src.text.isEmpty()) {
@@ -154,7 +165,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+   /* override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putString("BMI_RESULT", resultTV.text.toString())
         outState?.putString("BMI_CATEGORY", categoryTV.text.toString())
         outState?.putBoolean("ARE_UNITS_CHANGED", areUnitsSwitched)
@@ -178,6 +189,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             currentBmiCalculator = bmiKgCm
         }
-    }
+    }*/
 
 }

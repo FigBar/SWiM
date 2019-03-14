@@ -11,4 +11,5 @@
     <string name="lb_label">Mass[lb]</string>
     <string name="in_label">Height[in]</string>
     <string name="your_bmi_detail">Your BMI Detail:</string>
+    <string name="about_activity_label">About</string>
 </resources>

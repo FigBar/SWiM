@@ -9,8 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:configChanges="orientation|screenSize">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +23,13 @@
             android:name=".DetailBmiActivity"
             android:label="@string/detail_bmi_activity_label"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about_activity_label"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
