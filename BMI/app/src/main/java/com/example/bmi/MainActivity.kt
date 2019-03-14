@@ -4,26 +4,39 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.example.bmi.logic.Bmi
 import com.example.bmi.logic.BmiForKgCm
+import com.example.bmi.logic.BmiForLbIn
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Intent
+
+
 
 class MainActivity : AppCompatActivity() {
 
-    private val bmiCalculator = BmiForKgCm(0, 0)
+    private var areUnitsSwitched: Boolean = false
+    private var currentBmiCalculator: Bmi? = null
+    private val bmiKgCm = BmiForKgCm(0, 0)
+    private val bmiLbIn = BmiForLbIn(0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        currentBmiCalculator = bmiKgCm
 
         massET.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                resultTV.text = ""
-                categoryTV.text = ""
+                results_segment.visibility = View.INVISIBLE
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -33,8 +46,7 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                resultTV.text = ""
-                categoryTV.text = ""
+                results_segment.visibility = View.INVISIBLE
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -42,21 +54,71 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        return when (item?.itemId) {
+            R.id.unit_change -> onUnitChanged(item)
+            else -> super.onOptionsItemSelected(item)
+
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.main, menu)
+        return true
+
+    }
+
+    fun goToInfoActivity(view: View) {
+        val intent = Intent(this, DetailBmiActivity::class.java)
+        val bmiBundle = Bundle()
+        bmiBundle.putString("BMI_RESULT", resultTV.text.toString())
+        bmiBundle.putString("BMI_CATEGORY", categoryTV.text.toString())
+        intent.putExtras(bmiBundle)
+        startActivity(intent)
+    }
+
     fun onCountClicked(view: View) {
         val mass = getValidBmiParameterForCalculations(massET, "mass") ?: return
         val height = getValidBmiParameterForCalculations(heightET, "height") ?: return
 
-        bmiCalculator.mass = mass
-        bmiCalculator.height = height
+        currentBmiCalculator?.adjustWeight(mass)
+        currentBmiCalculator?.adjustHeight(height)
 
         try {
-            val bmiResult = bmiCalculator.countBmi()
+            val bmiResult = currentBmiCalculator!!.countBmi()
             displayBmiResult(bmiResult)
             setCategory(bmiResult)
+            setColor(resultTV, categoryTV.text.toString())
+            results_segment.visibility = View.VISIBLE
         } catch (exc: IllegalArgumentException) {
             Toast.makeText(this, "Provide valid parameters!", Toast.LENGTH_SHORT).show()
-
+            results_segment.visibility = View.INVISIBLE
         }
+    }
+
+    private fun onUnitChanged(menuItem: MenuItem): Boolean {
+        areUnitsSwitched = !areUnitsSwitched
+        menuItem.isChecked = areUnitsSwitched
+        changeUnits()
+        return true
+    }
+
+    private fun changeUnits() {
+        if (areUnitsSwitched) {
+            currentBmiCalculator = bmiLbIn
+            massLabel.text = getString(R.string.lb_label)
+            heightLabel.text = getString(R.string.in_label)
+
+        } else {
+            currentBmiCalculator = bmiKgCm
+            massLabel.text = getString(R.string.mass_kg)
+            heightLabel.text = getString(R.string.height_cm)
+        }
+
+        results_segment.visibility = View.INVISIBLE
     }
 
     private fun getValidBmiParameterForCalculations(src: EditText, paramType: String): Int? {
@@ -71,8 +133,14 @@ class MainActivity : AppCompatActivity() {
         resultTV.text = String.format("%.2f", bmiResult)
     }
 
-    private fun setColor() {
-
+    private fun setColor(compToModify: TextView, bmiCategory: String) {
+        when (bmiCategory) {
+            "UNDERWEIGHT" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.lapisLazuli))
+            "HEALTHY" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.verdigris))
+            "OVERWEIGHT" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.overweightOrange))
+            "OBESITY" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.obesityDarkOrange))
+            else -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.pompeianRose))
+        }
     }
 
     private fun setCategory(bmiResult: Double?) {
@@ -85,4 +153,31 @@ class MainActivity : AppCompatActivity() {
             else -> "SEVERE OBESITY"
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putString("BMI_RESULT", resultTV.text.toString())
+        outState?.putString("BMI_CATEGORY", categoryTV.text.toString())
+        outState?.putBoolean("ARE_UNITS_CHANGED", areUnitsSwitched)
+        outState?.putString("MASS_LABEL", massLabel.text.toString())
+        outState?.putString("HEIGHT_LABEL", heightLabel.text.toString())
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if (savedInstanceState != null) {
+            areUnitsSwitched = savedInstanceState.getBoolean("ARE_UNITS_CHANGED")
+            currentBmiCalculator = if (areUnitsSwitched) bmiLbIn else bmiKgCm
+            massLabel.text = savedInstanceState.getString("MASS_LABEL")
+            heightLabel.text = savedInstanceState.getString("HEIGHT_LABEL")
+
+            resultTV.text = savedInstanceState.getString("BMI_RESULT")
+            categoryTV.text = savedInstanceState.getString("BMI_CATEGORY")
+            setColor(resultTV, categoryTV.text.toString())
+            results_segment.visibility = View.VISIBLE
+        } else {
+            currentBmiCalculator = bmiKgCm
+        }
+    }
+
 }

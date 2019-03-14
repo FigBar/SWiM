@@ -7,4 +7,8 @@
     <string name="provide_your_mass">Provide your mass</string>
     <string name="provide_your_height">Provide your height</string>
     <string name="your_bmi">Your BMI:</string>
+    <string name="detail_bmi_activity_label">BMI Detail</string>
+    <string name="lb_label">Mass[lb]</string>
+    <string name="in_label">Height[in]</string>
+    <string name="your_bmi_detail">Your BMI Detail:</string>
 </resources>

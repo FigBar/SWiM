@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="underweight_description">
+        An underweight person is a person whose body weight is considered too low to be healthy.
+        Underweight people have a body mass index (BMI) of under 18.5 or a weight 15% to 20% below that normal
+        for their age and height group. A person may be underweight due to genetics, metabolism, drug use,
+        lack of food (frequently due to poverty), eating disorder, or illness (both physical and mental).
+        Being underweight is associated with certain medical conditions,
+        including anorexia, type 1 diabetes, hyperthyroidism, cancer, or tuberculosis.
+        People with gastrointestinal or liver problems may be unable to absorb nutrients adequately.
+        People with certain eating disorders can also be underweight due to lack of nutrients/over exercise.
+    </string>
+    <string name="healthy_description">
+        Between 18.5 and 24.9 – you are in the healthy weight range.
+    </string>
+    <string name="overweight_description">
+        Being overweight or fat is having more body fat than is optimally healthy.
+        Being overweight is especially common where food supplies are plentiful and lifestyles are sedentary.
+        As of 2003, excess weight reached epidemic proportions globally,
+        with more than 1 billion adults being either overweight or obese.
+        In 2013 this increased to more than 2 billion. Increases have been observed across all age groups.
+        A healthy body requires a minimum amount of fat for proper functioning of the hormonal,
+        reproductive, and immune systems, as thermal insulation, as shock absorption for sensitive areas,
+        and as energy for future use. But the accumulation of too much storage fat can impair movement, flexibility,
+        and alter the appearance of the body.
+    </string>
+    <string name="obesity_description">
+        Obesity is a medical condition in which excess body fat
+        has accumulated to an extent that it may have a negative effect on health.
+        People are generally considered obese when their BMI is over 30 kg/cm2.
+        Obesity increases the likelihood of various diseases and conditions, particularly cardiovascular diseases,
+        type 2 diabetes, obstructive sleep apnea, certain types of cancer, osteoarthritis, and depression.
+    </string>
+    <string name="severe_obesity_description">
+        Class 3: BMI of 40 or higher. Class 3 obesity is sometimes categorized as “extreme” or “severe” obesity.
+    </string>
+</resources>

@@ -3,4 +3,10 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="overweightOrange">#FFA500</color>
+    <color name="obesityDarkOrange">#FF2C0B</color>
+    <color name="pompeianRose">#B80000</color>
+    <color name="lapisLazuli">#26619C</color>
+    <color name="verdigris">#00A693</color>
+
 </resources>
