@@ -41,7 +41,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="30sp"
-            android:text="AUTHOR:" />
+            android:text="@string/author" />
 
         <TextView
             android:id="@+id/textView2"
@@ -53,7 +53,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="24sp"
-            android:text="Some retarted child" />
+            android:text="@string/author_name_surname" />
 
         <TextView
             android:id="@+id/textView3"
@@ -66,6 +66,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="24sp"
-            android:text="Sorry for inconvenience of having to use this app :(" />
+            android:text="@string/user_addressing" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

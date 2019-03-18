@@ -5,10 +5,10 @@
         android:id="@+id/unit_change"
         android:checkable="true"
         android:enabled="true"
-        android:title="Change Unit" />
+        android:title="@string/imperial_units" />
     <item
         android:id="@+id/about"
         android:checkable="false"
         android:enabled="true"
-        android:title="About" />
+        android:title="@string/about" />
 </menu>

@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 
 
-
 class MainActivity : AppCompatActivity() {
 
     private var areUnitsSwitched: Boolean = false
@@ -71,7 +70,8 @@ class MainActivity : AppCompatActivity() {
         return true
 
     }
-    fun onAboutSelected() : Boolean {
+
+    private fun onAboutSelected(): Boolean {
         val aboutIntent = Intent(this, AboutActivity::class.java)
         startActivity(aboutIntent)
         return true
@@ -80,8 +80,8 @@ class MainActivity : AppCompatActivity() {
     fun goToInfoActivity(view: View) {
         val infoIntent = Intent(this, DetailBmiActivity::class.java)
         val bmiBundle = Bundle()
-        bmiBundle.putString("BMI_RESULT", resultTV.text.toString())
-        bmiBundle.putString("BMI_CATEGORY", categoryTV.text.toString())
+        bmiBundle.putString(getString(R.string.result_bundle_key), resultTV.text.toString())
+        bmiBundle.putString(getString(R.string.category_bundle_key), categoryTV.text.toString())
         infoIntent.putExtras(bmiBundle)
         startActivity(infoIntent)
     }
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             heightLabel.text = getString(R.string.height_cm)
         }
         resultTV.text = ""
-        categoryTV.text =""
+        categoryTV.text = ""
         massET.text.clear()
         heightET.text.clear()
         results_segment.visibility = View.INVISIBLE
@@ -116,8 +116,8 @@ class MainActivity : AppCompatActivity() {
         val mass = getValidBmiParameterForCalculations(massET, "mass") ?: return
         val height = getValidBmiParameterForCalculations(heightET, "height") ?: return
 
-        currentBmiCalculator?.adjustWeight(mass)
-        currentBmiCalculator?.adjustHeight(height)
+        currentBmiCalculator?.mass = mass
+        currentBmiCalculator?.height = height
 
         try {
             val bmiResult = currentBmiCalculator!!.countBmi()
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             setColor(resultTV, categoryTV.text.toString())
             results_segment.visibility = View.VISIBLE
         } catch (exc: IllegalArgumentException) {
-            Toast.makeText(this, "Provide valid parameters!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.valid_parameters_request), Toast.LENGTH_SHORT).show()
             results_segment.visibility = View.INVISIBLE
         }
     }
@@ -146,10 +146,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setColor(compToModify: TextView, bmiCategory: String) {
         when (bmiCategory) {
-            "UNDERWEIGHT" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.lapisLazuli))
-            "HEALTHY" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.verdigris))
-            "OVERWEIGHT" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.overweightOrange))
-            "OBESITY" -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.obesityDarkOrange))
+            getString(R.string.underweight) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.lapisLazuli))
+            getString(R.string.healthy) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.verdigris))
+            getString(R.string.overweight) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.overweightOrange))
+            getString(R.string.obesity) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.obesityDarkOrange))
             else -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.pompeianRose))
         }
     }
@@ -157,38 +157,12 @@ class MainActivity : AppCompatActivity() {
     private fun setCategory(bmiResult: Double?) {
         categoryTV.text = when {
             bmiResult == null -> ""
-            bmiResult < 18.5 -> "UNDERWEIGHT"
-            bmiResult < 25 -> "HEALTHY"
-            bmiResult < 30 -> "OVERWEIGHT"
-            bmiResult < 35 -> "OBESITY"
-            else -> "SEVERE OBESITY"
+            bmiResult < 18.5 -> getString(R.string.underweight)
+            bmiResult < 25 -> getString(R.string.healthy)
+            bmiResult < 30 -> getString(R.string.overweight)
+            bmiResult < 35 -> getString(R.string.obesity)
+            else -> getString(R.string.severe_obesity)
         }
     }
-
-   /* override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putString("BMI_RESULT", resultTV.text.toString())
-        outState?.putString("BMI_CATEGORY", categoryTV.text.toString())
-        outState?.putBoolean("ARE_UNITS_CHANGED", areUnitsSwitched)
-        outState?.putString("MASS_LABEL", massLabel.text.toString())
-        outState?.putString("HEIGHT_LABEL", heightLabel.text.toString())
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-        if (savedInstanceState != null) {
-            areUnitsSwitched = savedInstanceState.getBoolean("ARE_UNITS_CHANGED")
-            currentBmiCalculator = if (areUnitsSwitched) bmiLbIn else bmiKgCm
-            massLabel.text = savedInstanceState.getString("MASS_LABEL")
-            heightLabel.text = savedInstanceState.getString("HEIGHT_LABEL")
-
-            resultTV.text = savedInstanceState.getString("BMI_RESULT")
-            categoryTV.text = savedInstanceState.getString("BMI_CATEGORY")
-            setColor(resultTV, categoryTV.text.toString())
-            results_segment.visibility = View.VISIBLE
-        } else {
-            currentBmiCalculator = bmiKgCm
-        }
-    }*/
 
 }
