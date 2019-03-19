@@ -21,6 +21,7 @@ import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
+
     private var areUnitsSwitched: Boolean = false
     private var currentBmiCalculator: Bmi? = null
     private val bmiKgCm = BmiForKgCm(0, 0)
@@ -29,12 +30,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         currentBmiCalculator = bmiKgCm
 
         massET.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
+                resultTV.text = ""
+                categoryTV.text = ""
                 results_segment.visibility = View.INVISIBLE
             }
 
@@ -45,12 +49,51 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
+                resultTV.text = ""
+                categoryTV.text = ""
                 results_segment.visibility = View.INVISIBLE
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+
+        outState?.putString(getString(R.string.result_bundle_key), resultTV.text.toString())
+        outState?.putString(getString(R.string.category_bundle_key), categoryTV.text.toString())
+        outState?.putBoolean(getString(R.string.units_flag_key), areUnitsSwitched)
+        super.onSaveInstanceState(outState)
+
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if (savedInstanceState?.getString(getString(R.string.result_bundle_key)) != "") {
+            resultTV.text = savedInstanceState?.getString(getString(R.string.result_bundle_key))
+            categoryTV.text = savedInstanceState?.getString(getString(R.string.category_bundle_key))
+            setColor(resultTV, categoryTV.text.toString())
+            results_segment.visibility = View.VISIBLE
+            areUnitsSwitched = savedInstanceState!!.getBoolean(getString(R.string.units_flag_key))
+            if (areUnitsSwitched) {
+                currentBmiCalculator = bmiLbIn
+                massLabel.text = getString(R.string.lb_label)
+                heightLabel.text = getString(R.string.in_label)
+                invalidateOptionsMenu()
+            } else {
+                currentBmiCalculator = bmiKgCm
+                massLabel.text = getString(R.string.mass_kg)
+                heightLabel.text = getString(R.string.height_cm)
+            }
+        } else {
+            currentBmiCalculator = bmiKgCm
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.unit_change)?.isChecked = areUnitsSwitched
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -146,10 +189,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun setColor(compToModify: TextView, bmiCategory: String) {
         when (bmiCategory) {
-            getString(R.string.underweight) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.lapisLazuli))
+            getString(R.string.underweight) -> compToModify.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.lapisLazuli
+                )
+            )
             getString(R.string.healthy) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.verdigris))
-            getString(R.string.overweight) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.overweightOrange))
-            getString(R.string.obesity) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.obesityDarkOrange))
+            getString(R.string.overweight) -> compToModify.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.overweightOrange
+                )
+            )
+            getString(R.string.obesity) -> compToModify.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.obesityDarkOrange
+                )
+            )
             else -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.pompeianRose))
         }
     }

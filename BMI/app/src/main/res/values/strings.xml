@@ -25,4 +25,5 @@
     <string name="author">AUTHOR:</string>
     <string name="author_name_surname">Some retarted child</string>
     <string name="user_addressing">Sorry for inconvenience of having to use this app :(</string>
+    <string name="units_flag_key">ARE_UNITS_SWITCHED</string>
 </resources>

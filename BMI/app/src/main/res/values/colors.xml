@@ -9,5 +9,8 @@
     <color name="lapisLazuli">#26619C</color>
     <color name="verdigris">#00A693</color>
     <color name="shadedWhite">#fcfbf8</color>
+    <color name="myPrimary"> #2EC4B6</color>
+    <color name="myPrimaryDark">#011627</color>
+    <color name="myAccent">#E71D36</color>
 
 </resources>
