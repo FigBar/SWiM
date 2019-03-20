@@ -7,4 +7,23 @@
     <string name="provide_your_mass">Provide your mass</string>
     <string name="provide_your_height">Provide your height</string>
     <string name="your_bmi">Your BMI:</string>
+    <string name="detail_bmi_activity_label">BMI Detail</string>
+    <string name="lb_label">Mass[lb]</string>
+    <string name="in_label">Height[in]</string>
+    <string name="your_bmi_detail">Your BMI Detail:</string>
+    <string name="about_activity_label">About</string>
+    <string name="imperial_units">Imperial Units</string>
+    <string name="about">About</string>
+    <string name="underweight">UNDERWEIGHT</string>
+    <string name="healthy">HEALTHY</string>
+    <string name="overweight">OVERWEIGHT</string>
+    <string name="obesity">OBESITY</string>
+    <string name="severe_obesity">SEVERE OBESITY</string>
+    <string name="valid_parameters_request">Provide valid parameters!</string>
+    <string name="result_bundle_key">BMI_RESULT</string>
+    <string name="category_bundle_key">BMI_CATEGORY</string>
+    <string name="author">AUTHOR:</string>
+    <string name="author_name_surname">Some retarted child</string>
+    <string name="user_addressing">Sorry for inconvenience of having to use this app :(</string>
+    <string name="units_flag_key">ARE_UNITS_SWITCHED</string>
 </resources>

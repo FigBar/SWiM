@@ -1,8 +1,7 @@
 package com.example.bmi.logic
 
-interface Bmi {
+abstract class Bmi(var mass: Int, var height: Int){
 
-    fun countBmi() : Double
-
+    abstract fun countBmi() : Double
 
 }
