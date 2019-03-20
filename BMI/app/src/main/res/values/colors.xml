@@ -12,5 +12,6 @@
     <color name="myPrimary"> #2EC4B6</color>
     <color name="myPrimaryDark">#011627</color>
     <color name="myAccent">#E71D36</color>
+    <color name="myBackground">#FFFFF5</color>
 
 </resources>
