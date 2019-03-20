@@ -70,24 +70,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
+
         if (savedInstanceState?.getString(getString(R.string.result_bundle_key)) != "") {
             resultTV.text = savedInstanceState?.getString(getString(R.string.result_bundle_key))
             categoryTV.text = savedInstanceState?.getString(getString(R.string.category_bundle_key))
             setColor(resultTV, categoryTV.text.toString())
             results_segment.visibility = View.VISIBLE
-            areUnitsSwitched = savedInstanceState!!.getBoolean(getString(R.string.units_flag_key))
-            if (areUnitsSwitched) {
-                currentBmiCalculator = bmiLbIn
-                massLabel.text = getString(R.string.lb_label)
-                heightLabel.text = getString(R.string.in_label)
-                invalidateOptionsMenu()
-            } else {
-                currentBmiCalculator = bmiKgCm
-                massLabel.text = getString(R.string.mass_kg)
-                heightLabel.text = getString(R.string.height_cm)
-            }
+        }
+
+        areUnitsSwitched = savedInstanceState!!.getBoolean(getString(R.string.units_flag_key))
+        if (areUnitsSwitched) {
+            currentBmiCalculator = bmiLbIn
+            massLabel.text = getString(R.string.lb_label)
+            heightLabel.text = getString(R.string.in_label)
+            invalidateOptionsMenu()
         } else {
             currentBmiCalculator = bmiKgCm
+            massLabel.text = getString(R.string.mass_kg)
+            heightLabel.text = getString(R.string.height_cm)
         }
     }
 
