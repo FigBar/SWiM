@@ -17,13 +17,18 @@ import com.example.bmi.logic.BmiForKgCm
 import com.example.bmi.logic.BmiForLbIn
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import android.content.SharedPreferences
 import com.example.bmi.logic.HistoryElement
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
 
+    private var prefs: SharedPreferences? = null
+    private val PREFS_FILENAME = "com.example.bmi.prefs"
 
     private var areUnitsSwitched: Boolean = false
     private var currentBmiCalculator: Bmi? = null
@@ -34,9 +39,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
         currentBmiCalculator = bmiKgCm
-
+        readHistoryListFromPrefs()
 
         massET.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -64,12 +69,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun readHistoryListFromPrefs() {
+        val jsonHistory = prefs!!.getString(getString(R.string.history_array_key), "")
+        if (jsonHistory.isEmpty()) return
+        val destType = object : TypeToken<ArrayList<HistoryElement?>>() {}.type
+        historyList = Gson().fromJson<ArrayList<HistoryElement?>>(jsonHistory, destType)
+    }
+
+    private fun saveHistoryListToPrefs() {
+        val jsonHistoryList = Gson().toJson(historyList)
+        val editor = prefs!!.edit()
+        editor.remove(getString(R.string.history_array_key)).commit()
+        editor.putString(getString(R.string.history_array_key), jsonHistoryList)
+        editor.commit()
+    }
+
     override fun onSaveInstanceState(outState: Bundle?) {
 
         outState?.putString(getString(R.string.result_bundle_key), resultTV.text.toString())
         outState?.putString(getString(R.string.category_bundle_key), categoryTV.text.toString())
         outState?.putBoolean(getString(R.string.units_flag_key), areUnitsSwitched)
-        outState?.putParcelableArrayList(getString(R.string.history_array_key), historyList)
         super.onSaveInstanceState(outState)
 
     }
@@ -95,12 +114,12 @@ class MainActivity : AppCompatActivity() {
             massLabel.text = getString(R.string.mass_kg)
             heightLabel.text = getString(R.string.height_cm)
         }
-        historyList = savedInstanceState?.getParcelableArrayList(getString(R.string.history_array_key))
+        readHistoryListFromPrefs()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.unit_change)?.isChecked = areUnitsSwitched
-        if (historyList.size != 0) menu?.findItem(R.id.history)?.isEnabled = true
+        if (!historyList.isEmpty()) menu?.findItem(R.id.history)?.isEnabled = true
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -125,7 +144,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun onHistorySelected(): Boolean {
         val historyIntent = Intent(this, BmiHistoryActivity::class.java)
-        historyIntent.putParcelableArrayListExtra(getString(R.string.history_array_key), historyList)
         startActivity(historyIntent)
         return true
     }
@@ -213,6 +231,7 @@ class MainActivity : AppCompatActivity() {
             historyList.add(HistoryElement(mass, height, bmiResult, date.toString()))
             historyList.addAll(listToAppend)
         }
+        saveHistoryListToPrefs()
         invalidateOptionsMenu()
     }
 
