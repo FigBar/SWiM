@@ -26,4 +26,6 @@
     <string name="author_name_surname">Some retarted child</string>
     <string name="user_addressing">Sorry for inconvenience of having to use this app :(</string>
     <string name="units_flag_key">ARE_UNITS_SWITCHED</string>
+    <string name="history_activity_label">BMI History</string>
+    <string name="history_array_key">HISTORY_ARRAY</string>
 </resources>

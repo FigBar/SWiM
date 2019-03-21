@@ -7,6 +7,12 @@
         android:enabled="true"
         android:title="@string/imperial_units" />
     <item
+        android:id="@+id/history"
+        android:checkable="false"
+        android:enabled="false"
+        android:title="@string/history_activity_label"
+        />
+    <item
         android:id="@+id/about"
         android:checkable="false"
         android:enabled="true"

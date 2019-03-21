@@ -17,6 +17,9 @@ import com.example.bmi.logic.BmiForKgCm
 import com.example.bmi.logic.BmiForLbIn
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
+import com.example.bmi.logic.HistoryElement
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,12 +29,14 @@ class MainActivity : AppCompatActivity() {
     private var currentBmiCalculator: Bmi? = null
     private val bmiKgCm = BmiForKgCm(0, 0)
     private val bmiLbIn = BmiForLbIn(0, 0)
+    private var historyList: ArrayList<HistoryElement?> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         currentBmiCalculator = bmiKgCm
+
 
         massET.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -64,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         outState?.putString(getString(R.string.result_bundle_key), resultTV.text.toString())
         outState?.putString(getString(R.string.category_bundle_key), categoryTV.text.toString())
         outState?.putBoolean(getString(R.string.units_flag_key), areUnitsSwitched)
+        outState?.putParcelableArrayList(getString(R.string.history_array_key), historyList)
         super.onSaveInstanceState(outState)
 
     }
@@ -89,10 +95,12 @@ class MainActivity : AppCompatActivity() {
             massLabel.text = getString(R.string.mass_kg)
             heightLabel.text = getString(R.string.height_cm)
         }
+        historyList = savedInstanceState?.getParcelableArrayList(getString(R.string.history_array_key))
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.unit_change)?.isChecked = areUnitsSwitched
+        if (historyList.size != 0) menu?.findItem(R.id.history)?.isEnabled = true
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -100,6 +108,7 @@ class MainActivity : AppCompatActivity() {
 
         return when (item?.itemId) {
             R.id.unit_change -> onUnitChanged(item)
+            R.id.history -> onHistorySelected()
             R.id.about -> onAboutSelected()
             else -> super.onOptionsItemSelected(item)
 
@@ -112,6 +121,13 @@ class MainActivity : AppCompatActivity() {
         inflater.inflate(R.menu.main, menu)
         return true
 
+    }
+
+    private fun onHistorySelected(): Boolean {
+        val historyIntent = Intent(this, BmiHistoryActivity::class.java)
+        historyIntent.putParcelableArrayListExtra(getString(R.string.history_array_key), historyList)
+        startActivity(historyIntent)
+        return true
     }
 
     private fun onAboutSelected(): Boolean {
@@ -168,6 +184,7 @@ class MainActivity : AppCompatActivity() {
             setCategory(bmiResult)
             setColor(resultTV, categoryTV.text.toString())
             results_segment.visibility = View.VISIBLE
+            saveResultInHistory()
         } catch (exc: IllegalArgumentException) {
             Toast.makeText(this, getString(R.string.valid_parameters_request), Toast.LENGTH_SHORT).show()
             results_segment.visibility = View.INVISIBLE
@@ -181,6 +198,22 @@ class MainActivity : AppCompatActivity() {
             return null
         }
         return src.text.toString().toInt()
+    }
+
+    private fun saveResultInHistory() {
+        val mass = massET.text.toString() + if (areUnitsSwitched) "lb" else "kg"
+        val height = heightET.text.toString() + if (areUnitsSwitched) "in" else "cm"
+        val bmiResult = resultTV.text.toString()
+        val date = Calendar.getInstance().time
+        if (historyList.isEmpty()) {
+            historyList.add(HistoryElement(mass, height, bmiResult, date.toString()))
+        } else {
+            val listToAppend = historyList.take(9)
+            historyList.clear()
+            historyList.add(HistoryElement(mass, height, bmiResult, date.toString()))
+            historyList.addAll(listToAppend)
+        }
+        invalidateOptionsMenu()
     }
 
     private fun displayBmiResult(bmiResult: Double) {
