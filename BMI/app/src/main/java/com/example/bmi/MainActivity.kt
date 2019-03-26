@@ -21,27 +21,35 @@ import android.content.SharedPreferences
 import com.example.bmi.logic.HistoryElement
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.lang.Exception
+import java.lang.IllegalArgumentException
+import java.lang.NumberFormatException
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val PREFS_FILENAME = "com.example.bmi.prefs"
+        private const val KEY = "history_list"
+
+    }
+
     private var prefs: SharedPreferences? = null
-    private val PREFS_FILENAME = "com.example.bmi.prefs"
+
 
     private var areUnitsSwitched: Boolean = false
     private var currentBmiCalculator: Bmi? = null
     private val bmiKgCm = BmiForKgCm(0, 0)
     private val bmiLbIn = BmiForLbIn(0, 0)
-    private var historyList: ArrayList<HistoryElement?> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
         currentBmiCalculator = bmiKgCm
-        readHistoryListFromPrefs()
 
         massET.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -69,19 +77,31 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun readHistoryListFromPrefs() {
-        val jsonHistory = prefs!!.getString(getString(R.string.history_array_key), "")
-        if (jsonHistory.isEmpty()) return
-        val destType = object : TypeToken<ArrayList<HistoryElement?>>() {}.type
-        historyList = Gson().fromJson<ArrayList<HistoryElement?>>(jsonHistory, destType)
+    private fun readHistoryListFromPrefs(): List<HistoryElement?> {
+        val jsonHistory = prefs!!.getString(KEY, "[]")
+
+        class Token : TypeToken<List<HistoryElement?>>()
+        return Gson().fromJson<List<HistoryElement?>>(jsonHistory, Token().type)
     }
 
-    private fun saveHistoryListToPrefs() {
-        val jsonHistoryList = Gson().toJson(historyList)
-        val editor = prefs!!.edit()
-        editor.remove(getString(R.string.history_array_key)).commit()
-        editor.putString(getString(R.string.history_array_key), jsonHistoryList)
-        editor.commit()
+    private fun saveHistoryListToPrefs(elem: HistoryElement?) {
+        val previousHistoryList = readHistoryListFromPrefs()
+        val currentHistoryList = listOf(elem) + previousHistoryList.take(9)
+        val jsonHistory = Gson().toJson(currentHistoryList)
+        with(prefs!!.edit()) {
+            remove(KEY)
+            putString(KEY, jsonHistory)
+            apply()
+        }
+
+    }
+
+    private fun createHistoryRecord(): HistoryElement? {
+        val mass = massET.text.toString() + if (areUnitsSwitched) "lb" else "kg"
+        val height = heightET.text.toString() + if (areUnitsSwitched) "in" else "cm"
+        val bmiResult = resultTV.text.toString()
+        val date = SimpleDateFormat("dd-MM-yyyy").format(Date())
+        return HistoryElement(mass, height, bmiResult, date)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -114,12 +134,11 @@ class MainActivity : AppCompatActivity() {
             massLabel.text = getString(R.string.mass_kg)
             heightLabel.text = getString(R.string.height_cm)
         }
-        readHistoryListFromPrefs()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.unit_change)?.isChecked = areUnitsSwitched
-        if (!historyList.isEmpty()) menu?.findItem(R.id.history)?.isEnabled = true
+        if (!readHistoryListFromPrefs().isEmpty()) menu?.findItem(R.id.history)?.isEnabled = true
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -190,22 +209,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onCountClicked(view: View) {
-        val mass = getValidBmiParameterForCalculations(massET, "mass") ?: return
-        val height = getValidBmiParameterForCalculations(heightET, "height") ?: return
-
-        currentBmiCalculator?.mass = mass
-        currentBmiCalculator?.height = height
-
         try {
+            val mass = getValidBmiParameterForCalculations(massET, "mass") ?: return
+            val height = getValidBmiParameterForCalculations(heightET, "height") ?: return
+            currentBmiCalculator?.mass = mass
+            currentBmiCalculator?.height = height
             val bmiResult = currentBmiCalculator!!.countBmi()
             displayBmiResult(bmiResult)
             setCategory(bmiResult)
             setColor(resultTV, categoryTV.text.toString())
             results_segment.visibility = View.VISIBLE
-            saveResultInHistory()
-        } catch (exc: IllegalArgumentException) {
-            Toast.makeText(this, getString(R.string.valid_parameters_request), Toast.LENGTH_SHORT).show()
-            results_segment.visibility = View.INVISIBLE
+            val newRecord = createHistoryRecord()
+            saveHistoryListToPrefs(newRecord)
+            invalidateOptionsMenu()
+        } catch (exc: Exception) {
+            when (exc) {
+                is IllegalArgumentException,
+                is NumberFormatException -> {
+                    Toast.makeText(this, getString(R.string.valid_parameters_request), Toast.LENGTH_SHORT).show()
+                    results_segment.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 
@@ -216,23 +240,6 @@ class MainActivity : AppCompatActivity() {
             return null
         }
         return src.text.toString().toInt()
-    }
-
-    private fun saveResultInHistory() {
-        val mass = massET.text.toString() + if (areUnitsSwitched) "lb" else "kg"
-        val height = heightET.text.toString() + if (areUnitsSwitched) "in" else "cm"
-        val bmiResult = resultTV.text.toString()
-        val date = Calendar.getInstance().time
-        if (historyList.isEmpty()) {
-            historyList.add(HistoryElement(mass, height, bmiResult, date.toString()))
-        } else {
-            val listToAppend = historyList.take(9)
-            historyList.clear()
-            historyList.add(HistoryElement(mass, height, bmiResult, date.toString()))
-            historyList.addAll(listToAppend)
-        }
-        saveHistoryListToPrefs()
-        invalidateOptionsMenu()
     }
 
     private fun displayBmiResult(bmiResult: Double) {

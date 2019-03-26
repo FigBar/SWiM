@@ -9,7 +9,7 @@ import com.example.bmi.R
 import com.example.bmi.logic.HistoryElement
 
 
-class HistoryAdapter (private val dataSet: ArrayList<HistoryElement?>) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter (private val dataSet: List<HistoryElement?>) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     override fun getItemCount(): Int = dataSet.size
 

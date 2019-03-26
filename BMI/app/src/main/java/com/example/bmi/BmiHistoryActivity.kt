@@ -14,13 +14,16 @@ import java.util.ArrayList
 
 class BmiHistoryActivity : AppCompatActivity() {
 
+    companion object {
+        const val PREFS_FILENAME = "com.example.bmi.prefs"
+        private const val KEY = "history_list"
+    }
     private var prefs: SharedPreferences? = null
-    private val PREFS_FILENAME = "com.example.bmi.prefs"
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private var dataSet: ArrayList<HistoryElement?> = arrayListOf()
+    private lateinit var dataSet: List<HistoryElement?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +35,14 @@ class BmiHistoryActivity : AppCompatActivity() {
         viewAdapter = HistoryAdapter(dataSet)
 
         recyclerView = history_recycler_view.apply {
-            //setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
         }
     }
 
     private fun readDataSet() {
-        val jsonHistory = prefs!!.getString("HISTORY_ARRAY", "")
-        val destType = object : TypeToken<ArrayList<HistoryElement?>>(){}.type
-        dataSet = Gson().fromJson<ArrayList<HistoryElement?>>(jsonHistory, destType)
+        val jsonHistory = prefs!!.getString(KEY, "[]")
+        class Token : TypeToken<List<HistoryElement?>>()
+        dataSet = Gson().fromJson<ArrayList<HistoryElement?>>(jsonHistory, Token().type)
     }
 }
