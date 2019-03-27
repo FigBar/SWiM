@@ -20,12 +20,9 @@
     <string name="obesity">OBESITY</string>
     <string name="severe_obesity">SEVERE OBESITY</string>
     <string name="valid_parameters_request">Provide valid parameters!</string>
-    <string name="result_bundle_key">BMI_RESULT</string>
-    <string name="category_bundle_key">BMI_CATEGORY</string>
     <string name="author">AUTHOR:</string>
     <string name="author_name_surname">Some retarted child</string>
     <string name="user_addressing">Sorry for inconvenience of having to use this app :(</string>
-    <string name="units_flag_key">ARE_UNITS_SWITCHED</string>
     <string name="history_activity_label">BMI History</string>
     <string name="history_array_key">HISTORY_ARRAY</string>
 </resources>

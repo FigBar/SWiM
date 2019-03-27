@@ -1,5 +1,6 @@
 package com.example.bmi
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -17,38 +18,40 @@ import com.example.bmi.logic.BmiForKgCm
 import com.example.bmi.logic.BmiForLbIn
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
-import android.content.SharedPreferences
 import com.example.bmi.logic.HistoryElement
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.bmi.services.BmiHistoryServiceSharedPreferences
+import com.example.bmi.services.DisplayAttributeManager
+import com.example.bmi.services.DisplayAttributeService
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        const val PREFS_FILENAME = "com.example.bmi.prefs"
-        private const val KEY = "history_list"
-
+        const val RESULT_KEY = "bmi_result"
+        const val CATEGORY_KEY = "bmi_category"
+        private const val UNITS_SWITCH_KEY = "units_switch"
     }
 
-    private var prefs: SharedPreferences? = null
-
-
+    private lateinit var prefsService: BmiHistoryServiceSharedPreferences
+    private lateinit var viewAttributeManager: DisplayAttributeManager
+    private lateinit var currentBmiCalculator: Bmi
     private var areUnitsSwitched: Boolean = false
-    private var currentBmiCalculator: Bmi? = null
     private val bmiKgCm = BmiForKgCm(0, 0)
     private val bmiLbIn = BmiForLbIn(0, 0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        prefs = this.getSharedPreferences(PREFS_FILENAME, 0)
+        prefsService = BmiHistoryServiceSharedPreferences(
+            this.getSharedPreferences(
+                BmiHistoryServiceSharedPreferences.PREFS_FILENAME,
+                Context.MODE_PRIVATE)
+        )
+        viewAttributeManager = DisplayAttributeManager(this)
         currentBmiCalculator = bmiKgCm
 
         massET.addTextChangedListener(object : TextWatcher {
@@ -77,38 +80,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun readHistoryListFromPrefs(): List<HistoryElement?> {
-        val jsonHistory = prefs!!.getString(KEY, "[]")
-
-        class Token : TypeToken<List<HistoryElement?>>()
-        return Gson().fromJson<List<HistoryElement?>>(jsonHistory, Token().type)
-    }
-
-    private fun saveHistoryListToPrefs(elem: HistoryElement?) {
-        val previousHistoryList = readHistoryListFromPrefs()
-        val currentHistoryList = listOf(elem) + previousHistoryList.take(9)
-        val jsonHistory = Gson().toJson(currentHistoryList)
-        with(prefs!!.edit()) {
-            remove(KEY)
-            putString(KEY, jsonHistory)
-            apply()
-        }
-
-    }
-
-    private fun createHistoryRecord(): HistoryElement? {
+    private fun createHistoryRecord(): HistoryElement {
         val mass = massET.text.toString() + if (areUnitsSwitched) "lb" else "kg"
         val height = heightET.text.toString() + if (areUnitsSwitched) "in" else "cm"
         val bmiResult = resultTV.text.toString()
-        val date = SimpleDateFormat("dd-MM-yyyy").format(Date())
+        val date = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
         return HistoryElement(mass, height, bmiResult, date)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
 
-        outState?.putString(getString(R.string.result_bundle_key), resultTV.text.toString())
-        outState?.putString(getString(R.string.category_bundle_key), categoryTV.text.toString())
-        outState?.putBoolean(getString(R.string.units_flag_key), areUnitsSwitched)
+        outState?.putString(RESULT_KEY, resultTV.text.toString())
+        outState?.putString(CATEGORY_KEY, categoryTV.text.toString())
+        outState?.putBoolean(UNITS_SWITCH_KEY, areUnitsSwitched)
         super.onSaveInstanceState(outState)
 
     }
@@ -116,14 +100,14 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        if (savedInstanceState?.getString(getString(R.string.result_bundle_key)) != "") {
-            resultTV.text = savedInstanceState?.getString(getString(R.string.result_bundle_key))
-            categoryTV.text = savedInstanceState?.getString(getString(R.string.category_bundle_key))
-            setColor(resultTV, categoryTV.text.toString())
+        if (savedInstanceState?.getString(RESULT_KEY) != "") {
+            resultTV.text = savedInstanceState?.getString(RESULT_KEY)
+            categoryTV.text = savedInstanceState?.getString(CATEGORY_KEY)
+            viewAttributeManager.setTextColor(resultTV, resultTV.text.toString().toDouble())
             results_segment.visibility = View.VISIBLE
         }
 
-        areUnitsSwitched = savedInstanceState!!.getBoolean(getString(R.string.units_flag_key))
+        areUnitsSwitched = savedInstanceState!!.getBoolean(UNITS_SWITCH_KEY)
         if (areUnitsSwitched) {
             currentBmiCalculator = bmiLbIn
             massLabel.text = getString(R.string.lb_label)
@@ -138,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.unit_change)?.isChecked = areUnitsSwitched
-        if (!readHistoryListFromPrefs().isEmpty()) menu?.findItem(R.id.history)?.isEnabled = true
+        if (!prefsService.readAllRecords().isEmpty()) menu?.findItem(R.id.history)?.isEnabled = true
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -176,8 +160,8 @@ class MainActivity : AppCompatActivity() {
     fun goToInfoActivity(view: View) {
         val infoIntent = Intent(this, DetailBmiActivity::class.java)
         val bmiBundle = Bundle()
-        bmiBundle.putString(getString(R.string.result_bundle_key), resultTV.text.toString())
-        bmiBundle.putString(getString(R.string.category_bundle_key), categoryTV.text.toString())
+        bmiBundle.putString(RESULT_KEY, resultTV.text.toString())
+        bmiBundle.putString(CATEGORY_KEY, categoryTV.text.toString())
         infoIntent.putExtras(bmiBundle)
         startActivity(infoIntent)
     }
@@ -212,15 +196,15 @@ class MainActivity : AppCompatActivity() {
         try {
             val mass = getValidBmiParameterForCalculations(massET, "mass") ?: return
             val height = getValidBmiParameterForCalculations(heightET, "height") ?: return
-            currentBmiCalculator?.mass = mass
-            currentBmiCalculator?.height = height
-            val bmiResult = currentBmiCalculator!!.countBmi()
+            currentBmiCalculator.mass = mass
+            currentBmiCalculator.height = height
+            val bmiResult = currentBmiCalculator.countBmi()
             displayBmiResult(bmiResult)
             setCategory(bmiResult)
-            setColor(resultTV, categoryTV.text.toString())
+            viewAttributeManager.setTextColor(resultTV, bmiResult)
             results_segment.visibility = View.VISIBLE
             val newRecord = createHistoryRecord()
-            saveHistoryListToPrefs(newRecord)
+            prefsService.saveHistoryRecord(newRecord)
             invalidateOptionsMenu()
         } catch (exc: Exception) {
             when (exc) {
@@ -244,31 +228,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayBmiResult(bmiResult: Double) {
         resultTV.text = String.format("%.2f", bmiResult)
-    }
-
-    private fun setColor(compToModify: TextView, bmiCategory: String) {
-        when (bmiCategory) {
-            getString(R.string.underweight) -> compToModify.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.lapisLazuli
-                )
-            )
-            getString(R.string.healthy) -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.verdigris))
-            getString(R.string.overweight) -> compToModify.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.overweightOrange
-                )
-            )
-            getString(R.string.obesity) -> compToModify.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.obesityDarkOrange
-                )
-            )
-            else -> compToModify.setTextColor(ContextCompat.getColor(this, R.color.pompeianRose))
-        }
     }
 
     private fun setCategory(bmiResult: Double?) {

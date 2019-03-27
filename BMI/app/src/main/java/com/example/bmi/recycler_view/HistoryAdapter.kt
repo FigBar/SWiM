@@ -9,7 +9,7 @@ import com.example.bmi.R
 import com.example.bmi.logic.HistoryElement
 
 
-class HistoryAdapter (private val dataSet: List<HistoryElement?>) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter (private val dataSet: List<HistoryElement>) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     override fun getItemCount(): Int = dataSet.size
 
@@ -20,10 +20,10 @@ class HistoryAdapter (private val dataSet: List<HistoryElement?>) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        holder.bmiTextView?.text = dataSet[position]?.bmiResult
-        holder.massTextView?.text = dataSet[position]?.mass
-        holder.heightTextView?.text = dataSet[position]?.height
-        holder.dateTextView?.text = dataSet[position]?.date
+        holder.bmiTextView?.text = dataSet[position].bmiResult
+        holder.massTextView?.text = dataSet[position].mass
+        holder.heightTextView?.text = dataSet[position].height
+        holder.dateTextView?.text = dataSet[position].date
         holder.indexDisplay?.text = (position + 1).toString()
 
     }
