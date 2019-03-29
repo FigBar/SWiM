@@ -8,10 +8,10 @@
     <color name="pompeianRose">#B80000</color>
     <color name="lapisLazuli">#26619C</color>
     <color name="verdigris">#00A693</color>
-    <color name="shadedWhite">#fcfbf8</color>
-    <color name="myPrimary"> #2EC4B6</color>
+    <color name="shadedWhite">#FCFBF8</color>
+    <color name="myPrimary">#2EC4B6</color>
     <color name="myPrimaryDark">#011627</color>
-    <color name="myAccent">#E71D36</color>
+    <color name="myAccent">#DF4558</color>
     <color name="myBackground">#FFFFF5</color>
 
 </resources>

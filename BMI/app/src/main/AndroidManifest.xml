@@ -22,14 +22,17 @@
             android:name=".DetailBmiActivity"
             android:label="@string/detail_bmi_activity_label"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".AboutActivity"
             android:label="@string/about_activity_label"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".BmiHistoryActivity"
+            android:label="@string/history_activity_label"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

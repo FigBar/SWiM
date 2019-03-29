@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bmi_list_item_constr_layout1_height"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/bmi_universal_constr_lay_margin"
+    android:paddingTop="@dimen/bmi_list_item_constr_layout_alternative_vertical_margin"
+    android:paddingEnd="@dimen/bmi_universal_constr_lay_margin"
+    android:paddingBottom="@dimen/bmi_list_item_constr_layout_alternative_vertical_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bmi_list_item_constr_layout2_height"
+        android:background="@drawable/rounded_corner"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/bmi_universal_constr_lay_margin"
+        android:paddingTop="@dimen/bmi_universal_constr_lay_margin"
+        android:paddingEnd="@dimen/bmi_universal_constr_lay_margin"
+        android:paddingBottom="@dimen/bmi_universal_constr_lay_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.08" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/bmi_list_item_TV4_margin_start"
+            android:layout_marginTop="@dimen/bmi_list_item_TV4_margin_top"
+            android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+            android:layout_marginBottom="@dimen/bmi_list_item_margin_bottom"
+            android:background="@drawable/text_view_style_2"
+            android:gravity="center"
+            android:text="@string/bmi_list_item_bmi_detail"
+            android:textColor="@color/shadedWhite"
+            app:layout_constraintBottom_toTopOf="@+id/guideline9"
+            app:layout_constraintEnd_toStartOf="@+id/textView7"
+            app:layout_constraintStart_toStartOf="@+id/guideline12"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/bmi_list_item_TV7_height"
+            android:layout_marginStart="@dimen/bmi_list_item_unary_margin_side"
+            android:layout_marginTop="@dimen/bmi_list_item_half_margin_top"
+            android:layout_marginEnd="@dimen/bmi_list_item_unary_margin_side"
+            android:layout_marginBottom="@dimen/bmi_list_item_margin_bottom"
+            android:background="@drawable/text_view_style_2"
+            android:gravity="center"
+            android:text="@string/bmi_list_item_date"
+            android:textColor="@color/shadedWhite"
+            app:layout_constraintBottom_toTopOf="@+id/guideline9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline8"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/indexDisplay"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/bmi_list_item_unary_margin_side"
+            android:layout_marginTop="@dimen/bmi_list_item_half_margin_top"
+            android:layout_marginEnd="@dimen/bmi_list_item_unary_margin_side"
+            android:layout_marginBottom="@dimen/bmi_list_item_margin_bottom"
+            android:gravity="center"
+            android:textColor="@color/shadedWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline9" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/bmi_list_item_unary_margin_side"
+            android:layout_marginEnd="@dimen/bmi_list_item_unary_margin_side"
+            android:background="@drawable/rounded_corner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/indexDisplay"
+            app:layout_constraintTop_toTopOf="@+id/guideline9">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.68" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.35" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <TextView
+                android:id="@+id/dateTV"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/bmi_list_item_margin_side"
+                android:layout_marginTop="@dimen/bmi_list_item_margin_top"
+                android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+                android:layout_marginBottom="@dimen/bmi_list_item_margin_bottom"
+                android:gravity="center"
+                android:textColor="@color/shadedWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline10"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bmiTV"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/bmi_list_item_margin_side"
+                android:layout_marginTop="@dimen/bmi_list_item_margin_top"
+                android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+                android:layout_marginBottom="@dimen/bmi_list_item_margin_bottom"
+                android:gravity="center"
+                android:textColor="@color/shadedWhite"
+                android:textSize="@dimen/bmi_list_item_bmi_view_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline11"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/bmi_list_item_margin_side"
+                android:layout_marginTop="@dimen/bmi_list_item_unary_margin_top"
+                android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+                android:text="@string/bmi_list_item_mass_label"
+                android:textColor="@color/shadedWhite"
+                app:layout_constraintEnd_toStartOf="@+id/guideline10"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/guideline11"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/massTV"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/bmi_list_item_mass_view_height"
+                android:layout_marginStart="@dimen/bmi_list_item_margin_side"
+                android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+                android:layout_marginBottom="@dimen/bmi_list_item_half_margin_bottom"
+                android:textColor="@color/shadedWhite"
+                app:layout_constraintBottom_toTopOf="@+id/guideline13"
+                app:layout_constraintEnd_toStartOf="@+id/guideline10"
+                app:layout_constraintStart_toStartOf="@+id/guideline11"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/bmi_list_item_margin_side"
+                android:layout_marginTop="@dimen/bmi_list_item_unary_margin_top"
+                android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+                android:text="@string/bmi_list_item_height_label"
+                android:textColor="@color/shadedWhite"
+                app:layout_constraintEnd_toStartOf="@+id/guideline10"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/guideline11"
+                app:layout_constraintTop_toTopOf="@+id/guideline13" />
+
+            <TextView
+                android:id="@+id/heightTV"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/bmi_list_item_margin_side"
+                android:layout_marginEnd="@dimen/bmi_list_item_margin_side"
+                android:layout_marginBottom="@dimen/bmi_list_item_half_margin_bottom"
+                android:textColor="@color/shadedWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline10"
+                app:layout_constraintStart_toStartOf="@+id/guideline11"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,10 +7,4 @@
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
         <item name="colorAccent">@color/myAccent</item>
     </style>
-    <!--<style name="BetterTheme" >
-        <item name="colorPrimary">@color/myPrimary</item>
-        <item name="colorPrimaryDark">@color/myPrimaryDark</item>
-        <item name="colorAccent">@color/myAccent</item>
-    </style>-->
-
 </resources>
