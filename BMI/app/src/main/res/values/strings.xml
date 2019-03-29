@@ -25,4 +25,8 @@
     <string name="user_addressing">Sorry for inconvenience of having to use this app :(</string>
     <string name="history_activity_label">BMI History</string>
     <string name="history_array_key">HISTORY_ARRAY</string>
+    <string name="bmi_list_item_bmi_detail">BMI Detail</string>
+    <string name="bmi_list_item_date">Date</string>
+    <string name="bmi_list_item_mass_label">mass:</string>
+    <string name="bmi_list_item_height_label">height:</string>
 </resources>

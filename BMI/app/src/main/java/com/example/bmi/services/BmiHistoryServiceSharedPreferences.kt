@@ -17,7 +17,7 @@ class BmiHistoryServiceSharedPreferences(private val prefs: SharedPreferences) :
     override fun saveHistoryRecord(elem: HistoryElement) {
         val previousHistoryList = readAllRecords()
         val currentHistoryList = listOf(elem) + previousHistoryList.take(9)
-        val jsonHistory = Gson().toJson(currentHistoryList)
+        val jsonHistory = gson.toJson(currentHistoryList)
         with(prefs.edit()) {
             remove(KEY)
             putString(KEY, jsonHistory)
