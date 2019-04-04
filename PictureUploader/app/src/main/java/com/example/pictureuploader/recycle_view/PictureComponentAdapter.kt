@@ -1,19 +1,23 @@
 package com.example.pictureuploader.recycle_view
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pictureuploader.R
 import com.example.pictureuploader.logic.PictureRecord
 import com.example.pictureuploader.services.FirebaseTagService
 import com.squareup.picasso.Picasso
+import io.reactivex.Single
 import java.text.SimpleDateFormat
 import java.util.*
+
+
+
 
 class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, private val parentContext: Context) :
     RecyclerView.Adapter<PictureComponentAdapter.PictureComponentViewHolder>() {
@@ -29,9 +33,19 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
         holder.titleDisplay.text = dataSet[position].title
         holder.dateDisplay.text = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(dataSet[position].date)
         loadPicture(dataSet[position].url, holder.pictureDisplay)
-        val tagArray = tagService.generateTags(holder.pictureDisplay.drawable.toBitmap())
         dataSet[position].tags = tagArray
         holder.tagsDisplay.text = tagArray.take(3).joinToString(" #", prefix = "#")
+    }
+
+    private fun getBitmapSingle(picasso: Picasso, url: String): Single<Bitmap> = Single.create {
+        try {
+            if(!it.isDisposed) {
+                val bitmap: Bitmap = picasso.load(url).get()
+                it.onSuccess(bitmap)
+            }
+        } catch (e: Throwable) {
+            it.onError(e)
+        }
     }
 
     private fun loadPicture(url: String, container: ImageView) {
@@ -39,7 +53,16 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
             .load(url)
             .placeholder(R.drawable.loading)
             .error(R.drawable.error_image)
-            .into(container)
+            .into(
+                onBitmapLoaded = { bitmap: Bitmap, _: Picasso.LoadedFrom ->
+                    {
+                        container.setImageBitmap(bitmap)
+
+                    }
+                },
+                onBitmapFailed = {},
+                onPrepareLoad = {}
+            )
     }
 
     class PictureComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
