@@ -33,7 +33,7 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
 
     override fun onBindViewHolder(holder: PictureComponentViewHolder, position: Int) {
         holder.titleDisplay.text = dataSet[position].title
-        holder.dateDisplay.text = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(dataSet[position].date)
+        holder.dateDisplay.text = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(dataSet[position].date.time)
         loadPictureAndTags(dataSet[position].url, holder)
 
     }
