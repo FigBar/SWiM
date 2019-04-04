@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "792673005734",
+    "firebase_url": "https://pictureuploader-91f4c.firebaseio.com",
+    "project_id": "pictureuploader-91f4c",
+    "storage_bucket": "pictureuploader-91f4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792673005734:android:2654e6b1dd009e18",
+        "android_client_info": {
+          "package_name": "com.example.pictureuploader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_axEBW8eWekny8vL854ByVJQ9C4D7JC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "792673005734-ndbrgn9abmf35esp8bk6kiprjgd8g8lf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
