@@ -1,22 +1,28 @@
 package com.example.pictureuploader.recycle_view
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pictureuploader.R
 import com.example.pictureuploader.logic.PictureRecord
 import com.example.pictureuploader.services.FirebaseTagService
+import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, private val parentContext: Context) :
     RecyclerView.Adapter<PictureComponentAdapter.PictureComponentViewHolder>() {
+
     private val tagService: FirebaseTagService = FirebaseTagService
     override fun getItemCount(): Int = dataSet.size
 
@@ -27,19 +33,37 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
 
     override fun onBindViewHolder(holder: PictureComponentViewHolder, position: Int) {
         holder.titleDisplay.text = dataSet[position].title
-        holder.dateDisplay.text = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(dataSet[position].date)
-        loadPicture(dataSet[position].url, holder.pictureDisplay)
-        val tagArray = tagService.generateTags(holder.pictureDisplay.drawable.toBitmap())
-        dataSet[position].tags = tagArray
-        holder.tagsDisplay.text = tagArray.take(3).joinToString(" #", prefix = "#")
+        holder.dateDisplay.text =
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(dataSet[position].date.time)
+        loadPictureAndTags(dataSet[position].url, holder)
+
     }
 
-    private fun loadPicture(url: String, container: ImageView) {
+    private fun loadPictureAndTags(url: String, holder: PictureComponentViewHolder) {
         Picasso.with(parentContext)
             .load(url)
-            .placeholder(R.drawable.loading)
-            .error(R.drawable.error_image)
-            .into(container)
+            .into(object : Target {
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                    holder.pictureDisplay.setImageResource(R.drawable.loading)
+                }
+
+                override fun onBitmapFailed(errorDrawable: Drawable?) {
+                    holder.pictureDisplay.setImageResource(R.drawable.error_image)
+                }
+
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    holder.pictureDisplay.setImageBitmap(bitmap)
+                    FirebaseVision.getInstance().onDeviceImageLabeler
+                        .processImage(FirebaseVisionImage.fromBitmap(bitmap!!))
+                        .addOnSuccessListener {
+                            holder.tagsDisplay.text = it.map { it.text }
+                                .toTypedArray()
+                                .take(3)
+                                .joinToString(" #", prefix = "#")
+                        }
+                }
+            }
+            )
     }
 
     class PictureComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

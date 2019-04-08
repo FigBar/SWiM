@@ -21,27 +21,21 @@
         app:layout_constraintGuide_percent="0.4" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.75" />
 
     <TextView
         android:id="@+id/url_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Image URL:"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
+        android:gravity="center"
+        android:text="@string/image_url"
         app:layout_constraintBottom_toTopOf="@+id/url_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -51,12 +45,12 @@
         android:id="@+id/url_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginTop="@dimen/universal_margin_top"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
         android:ems="10"
-        android:hint="Provide image URL"
+        android:hint="@string/provide_image_url"
         android:inputType="textUri"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,12 +62,12 @@
         android:id="@+id/title_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginTop="@dimen/universal_margin_top"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
         android:ems="10"
-        android:hint="Provide image title"
+        android:hint="@string/provide_image_title"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,90 +77,70 @@
 
     <TextView
         android:id="@+id/title_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Title:"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
+        android:gravity="center"
+        android:text="@string/title"
         app:layout_constraintBottom_toTopOf="@+id/title_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/date_input"
+    <DatePicker
+        android:id="@+id/date_picker"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="Choose date"
-        android:inputType="date"
-        app:layout_constraintBottom_toTopOf="@+id/guideline8"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginTop="@dimen/universal_margin_top"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintBottom_toTopOf="@id/guideline9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline7"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Date:"
-        app:layout_constraintBottom_toTopOf="@+id/date_input"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/tags_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:hint="Type some tags"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/tags_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Tags:"
-        app:layout_constraintBottom_toTopOf="@+id/tags_input"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/add_picture_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Add"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginTop="@dimen/universal_margin_top"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
+        android:background="@drawable/roundedbutton"
+        android:textColor="@color/textColor"
         android:onClick="onAddClicked"
+        android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline9"
         app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/date_picker_label"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/universal_margin_side"
+        android:layout_marginTop="@dimen/universal_margin_top"
+        android:layout_marginEnd="@dimen/universal_margin_side"
+        android:layout_marginBottom="@dimen/universal_margin_bottom"
+        android:text="@string/date"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_input" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

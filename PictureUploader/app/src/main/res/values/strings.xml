@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">PictureUploader</string>
     <string name="add_picture">Add Picture</string>
+    <string name="image_url">Image URL:</string>
+    <string name="provide_image_url">Provide image URL</string>
+    <string name="provide_image_title">Provide image title</string>
+    <string name="title">Title:</string>
+    <string name="add">Add</string>
+    <string name="date">Date:</string>
 </resources>

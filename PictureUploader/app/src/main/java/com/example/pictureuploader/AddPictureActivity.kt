@@ -1,10 +1,12 @@
 package com.example.pictureuploader
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
 import com.example.pictureuploader.logic.PictureRecord
@@ -28,23 +30,10 @@ class AddPictureActivity : AppCompatActivity() {
 
         val url = getValidParameter(url_input, "image url") ?: return
         val title = getValidParameter(title_input, "image title") ?: return
-        val date = getValidParameter(date_input, "date") ?: return
-        //val tags = tags_input.text.toString()
-        //val tagArray: Array<String> = tags.split(",").map { it.trim() }.toTypedArray()
-
-
-        val currentDate: Date
-        val dateParser = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-
-        try {
-            currentDate = dateParser.parse(date)
-        } catch (exc: ParseException) {
-            Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val date = date_picker.checkIfDateNotFromFuture(this) ?: return
 
         val replyIntent = Intent()
-        replyIntent.putExtra(REPLY_KEY, PictureRecord(url, title, currentDate, arrayOf(" ")))
+        replyIntent.putExtra(REPLY_KEY, PictureRecord(url, title, date))
         setResult(Activity.RESULT_OK, replyIntent)
         finish()
     }
@@ -56,5 +45,16 @@ class AddPictureActivity : AppCompatActivity() {
             return null
         }
         return src.text.toString()
+    }
+
+    fun DatePicker.checkIfDateNotFromFuture(context: Context): Calendar? {
+        val date = Calendar.getInstance()
+        date.set(year, month, dayOfMonth)
+        if (date <= Calendar.getInstance()) {
+            return date
+        } else {
+            Toast.makeText(context, "Chosen date is invalid!", Toast.LENGTH_SHORT).show()
+            return null
+        }
     }
 }

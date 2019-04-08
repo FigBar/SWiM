@@ -4,8 +4,8 @@
     <dimen name="pict_card_radius">5dp</dimen>
     <dimen name="pict_card_elevation">3dp</dimen>
     <dimen name="pict_card_margin">8dp</dimen>
-    <dimen name="pict_card_margin_side">8dp</dimen>
-    <dimen name="pict_card_margin_top">8dp</dimen>
-    <dimen name="pict_card_margin_bottom">8dp</dimen>
+    <dimen name="universal_margin_side">8dp</dimen>
+    <dimen name="universal_margin_top">8dp</dimen>
+    <dimen name="universal_margin_bottom">8dp</dimen>
     <dimen name="pict_main_act_universal_margin">8dp</dimen>
 </resources>
