@@ -23,7 +23,8 @@ import java.util.*
 class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, private val parentContext: Context) :
     RecyclerView.Adapter<PictureComponentAdapter.PictureComponentViewHolder>() {
 
-    private val tagService: FirebaseTagService = FirebaseTagService
+    private var currentTarget: Target? = null
+
     override fun getItemCount(): Int = dataSet.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureComponentViewHolder {
@@ -40,30 +41,33 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
     }
 
     private fun loadPictureAndTags(url: String, holder: PictureComponentViewHolder) {
+        val target = object : Target {
+            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                holder.pictureDisplay.setImageResource(R.drawable.loading)
+            }
+
+            override fun onBitmapFailed(errorDrawable: Drawable?) {
+                holder.pictureDisplay.setImageResource(R.drawable.error_image)
+            }
+
+            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                holder.pictureDisplay.setImageBitmap(bitmap)
+                FirebaseVision.getInstance().onDeviceImageLabeler
+                    .processImage(FirebaseVisionImage.fromBitmap(bitmap!!))
+                    .addOnSuccessListener {
+                        holder.tagsDisplay.text = it.map { it.text }
+                            .toTypedArray()
+                            .take(3)
+                            .joinToString(" #", prefix = "#")
+                    }
+            }
+        }
+
+        currentTarget = target
+
         Picasso.with(parentContext)
             .load(url)
-            .into(object : Target {
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                    holder.pictureDisplay.setImageResource(R.drawable.loading)
-                }
-
-                override fun onBitmapFailed(errorDrawable: Drawable?) {
-                    holder.pictureDisplay.setImageResource(R.drawable.error_image)
-                }
-
-                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                    holder.pictureDisplay.setImageBitmap(bitmap)
-                    FirebaseVision.getInstance().onDeviceImageLabeler
-                        .processImage(FirebaseVisionImage.fromBitmap(bitmap!!))
-                        .addOnSuccessListener {
-                            holder.tagsDisplay.text = it.map { it.text }
-                                .toTypedArray()
-                                .take(3)
-                                .joinToString(" #", prefix = "#")
-                        }
-                }
-            }
-            )
+            .into(currentTarget)
     }
 
     class PictureComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

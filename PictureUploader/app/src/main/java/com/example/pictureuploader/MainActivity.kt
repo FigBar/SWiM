@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
     private fun addNewPictureRecord(newRecord: PictureRecord) {
         pictureRecordsList.add(0, newRecord)
         viewAdapter.notifyItemInserted(0)
+        viewManager.scrollToPosition(0)
     }
 
 
