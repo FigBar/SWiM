@@ -10,7 +10,7 @@ import android.view.MenuItem
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pictureuploader.logic.PictureRecord
+import com.example.pictureuploader.model.PictureRecord
 import com.example.pictureuploader.recycle_view.PictureComponentAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
