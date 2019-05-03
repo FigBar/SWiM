@@ -63,10 +63,12 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
             .into(object : Target {
                 override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
                     holder.pictureDisplay.setImageResource(R.drawable.loading)
+
                 }
 
                 override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
                     holder.pictureDisplay.setImageResource(R.drawable.error_image)
+
                 }
 
                 override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
