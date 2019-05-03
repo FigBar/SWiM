@@ -14,5 +14,5 @@ data class PictureRecord(
 ) : Parcelable {
 
     fun assessSimilarity(compareWith: PictureRecord): Int =
-        if (!compareWith.tags.isEmpty()) 0 else compareWith.tags.filter { tags.contains(it) }.count()
+        if (compareWith.tags.isEmpty()) 0 else compareWith.tags.filter { this.tags.contains(it) }.count()
 }

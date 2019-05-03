@@ -32,7 +32,7 @@ class FragmentActivity : AppCompatActivity() {
         val dataSet = intent.getParcelableArrayListExtra<PictureRecord>(PictureComponentAdapter.DATA_SET)
         val chosenPosition = intent.getIntExtra(PictureComponentAdapter.INDEX, -1)
         photoFragment = PhotoFragment.newInstance(dataSet[chosenPosition].url)
-        //detailFragment = DetailFragment.newInstance(dataSet[chosenPosition])
+        detailFragment = DetailFragment.newInstance(dataSet[chosenPosition])
         similarPhotosFragment = SimilarPhotosFragment.newInstance(dataSet, chosenPosition)
         launchFragments(savedInstanceState)
     }
@@ -41,11 +41,11 @@ class FragmentActivity : AppCompatActivity() {
         if(savedInstanceState == null) {
             fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, photoFragment, PHOTO_TAG)
                 .commit()
-            //fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, detailFragment, DETAILS_TAG)
-            //    .commit()
-            fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, similarPhotosFragment, SIMILARITIES_TAG)
+            fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, detailFragment, DETAILS_TAG)
                 .commit()
-            //hideFragment(detailFragment)
+            fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, similarPhotosFragment, SIMILARITIES_TAG)
+               .commit()
+            hideFragment(detailFragment)
             hideFragment(similarPhotosFragment)
         }
     }
@@ -53,11 +53,11 @@ class FragmentActivity : AppCompatActivity() {
     fun onChangeCardClicked(view: View) {
         fullPhotoMode = if(fullPhotoMode) {
             hideFragment(photoFragment)
-            //showFragment(detailFragment)
+            showFragment(detailFragment)
             showFragment(similarPhotosFragment)
             false
         } else {
-            //hideFragment(detailFragment)
+            hideFragment(detailFragment)
             hideFragment(similarPhotosFragment)
             showFragment(photoFragment)
             true
