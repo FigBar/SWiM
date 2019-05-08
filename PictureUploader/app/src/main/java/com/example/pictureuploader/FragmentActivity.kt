@@ -9,7 +9,6 @@ import com.example.pictureuploader.fragments.DetailFragment
 import com.example.pictureuploader.fragments.PhotoFragment
 import com.example.pictureuploader.fragments.SimilarPhotosFragment
 import com.example.pictureuploader.model.PictureRecord
-import com.example.pictureuploader.recycle_view.PictureComponentAdapter
 
 class FragmentActivity : AppCompatActivity() {
 

@@ -45,7 +45,7 @@ class AddPictureActivity : AppCompatActivity() {
         return src.text.toString()
     }
 
-    fun DatePicker.checkIfDateNotFromFuture(context: Context): Calendar? {
+    private fun DatePicker.checkIfDateNotFromFuture(context: Context): Calendar? {
         val date = Calendar.getInstance()
         date.set(year, month, dayOfMonth)
         if (date <= Calendar.getInstance()) {

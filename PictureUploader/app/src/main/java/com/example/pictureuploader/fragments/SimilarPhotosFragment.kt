@@ -56,10 +56,10 @@ class SimilarPhotosFragment : Fragment() {
     private fun findSimilarPhotos(): MutableList<PictureRecord> {
         val dataSet = arguments!!.getParcelableArrayList<PictureRecord>(PICTURE_RECORD_LIST)
         val item = arguments!!.getParcelable<PictureRecord>(ITEM)
-        val index = dataSet.indexOf(item)
-        val chosenPicture = dataSet.removeAt(index)
-        dataSet!!.sortWith(compareBy { it.assessSimilarity(chosenPicture) })
-        return dataSet.takeLast(6).filter { it.assessSimilarity(chosenPicture) != 0 }.toMutableList()
+        val index = dataSet?.indexOf(item)
+        val chosenPicture = dataSet?.removeAt(index!!)
+        dataSet!!.sortWith(compareBy { it.assessSimilarity(chosenPicture!!) })
+        return dataSet.takeLast(6).filter { it.assessSimilarity(chosenPicture!!) != 0 }.toMutableList()
 
     }
 
