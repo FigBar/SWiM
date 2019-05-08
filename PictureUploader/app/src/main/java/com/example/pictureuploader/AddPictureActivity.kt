@@ -9,10 +9,8 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Toast
-import com.example.pictureuploader.logic.PictureRecord
+import com.example.pictureuploader.model.PictureRecord
 import kotlinx.android.synthetic.main.activity_add_picture.*
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AddPictureActivity : AppCompatActivity() {
@@ -47,7 +45,7 @@ class AddPictureActivity : AppCompatActivity() {
         return src.text.toString()
     }
 
-    fun DatePicker.checkIfDateNotFromFuture(context: Context): Calendar? {
+    private fun DatePicker.checkIfDateNotFromFuture(context: Context): Calendar? {
         val date = Calendar.getInstance()
         date.set(year, month, dayOfMonth)
         if (date <= Calendar.getInstance()) {

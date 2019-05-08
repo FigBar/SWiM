@@ -7,10 +7,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pictureuploader.logic.PictureRecord
+import com.example.pictureuploader.model.PictureRecord
 import com.example.pictureuploader.recycle_view.PictureComponentAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,11 +20,13 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val NEW_PICTURE_REQUEST = 1
+        const val DATA_SET = "data_set"
+        const val ITEM = "item"
     }
 
     private var pictureRecordsList: MutableList<PictureRecord> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: PictureComponentAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
         setRecyclerViewItemTouchListener()
-
+        setRecyclerViewClickListener()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             R.id.add_picture_card -> onAddSelected()
             else -> super.onOptionsItemSelected(item)
         }
@@ -59,15 +62,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == NEW_PICTURE_REQUEST) {
+        if (requestCode == NEW_PICTURE_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
-                val newPictureRecord : PictureRecord? = data?.getParcelableExtra(AddPictureActivity.REPLY_KEY)
+                val newPictureRecord: PictureRecord? = data?.getParcelableExtra(AddPictureActivity.REPLY_KEY)
                 addNewPictureRecord(newPictureRecord!!)
             }
         }
     }
-
-
 
     private fun addNewPictureRecord(newRecord: PictureRecord) {
         pictureRecordsList.add(0, newRecord)
@@ -75,10 +76,24 @@ class MainActivity : AppCompatActivity() {
         viewManager.scrollToPosition(0)
     }
 
+    private fun setRecyclerViewClickListener() {
+        viewAdapter.setOnItemClickListener(object : PictureComponentAdapter.ClickListener {
+            override fun onItemClick(position: Int, view: View) {
+                val fragmentActIntent = Intent(this@MainActivity, FragmentActivity::class.java)
+                val fragBundle = Bundle()
+                fragBundle.putParcelableArrayList(DATA_SET, ArrayList(pictureRecordsList))
+                fragBundle.putParcelable(ITEM, pictureRecordsList[position])
+                fragmentActIntent.putExtras(fragBundle)
+                startActivity(fragmentActIntent)
+            }
+        })
+    }
 
     private fun setRecyclerViewItemTouchListener() {
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,

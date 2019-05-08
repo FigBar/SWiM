@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_card_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:onClick=""
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -12,8 +16,8 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/pict_card_margin"
         android:elevation="@dimen/pict_card_elevation"
-        app:cardCornerRadius="@dimen/pict_card_radius"
-        app:cardBackgroundColor="@color/pictureItemBackground">
+        app:cardBackgroundColor="@color/pictureItemBackground"
+        app:cardCornerRadius="@dimen/pict_card_radius">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -28,8 +32,8 @@
                 android:layout_marginTop="@dimen/universal_margin_top"
                 android:layout_marginEnd="@dimen/universal_margin_side"
                 android:layout_marginBottom="@dimen/universal_margin_bottom"
-                android:scaleType="fitCenter"
                 android:contentDescription="Picture from Internet"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toTopOf="@+id/guideline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
