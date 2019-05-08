@@ -113,7 +113,7 @@
         android:layout_marginEnd="@dimen/universal_margin_side"
         android:layout_marginBottom="@dimen/universal_margin_bottom"
         android:background="@drawable/roundedbutton"
-        android:textColor="@color/textColor"
+        android:textColor="@color/buttonTextColor"
         android:onClick="onAddClicked"
         android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"

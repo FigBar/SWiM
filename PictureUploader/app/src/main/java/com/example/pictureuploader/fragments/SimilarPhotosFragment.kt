@@ -7,12 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pictureuploader.R
 import com.example.pictureuploader.model.PictureRecord
-import com.squareup.picasso.Picasso
+import com.example.pictureuploader.recycle_view.SimilarPicturesAdapter
+import kotlinx.android.synthetic.main.fragment_similar_photos.*
 
 
 class SimilarPhotosFragment : Fragment() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     companion object {
         private const val PICTURE_RECORD_LIST = "picture_record_list"
@@ -28,29 +36,25 @@ class SimilarPhotosFragment : Fragment() {
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewManager = GridLayoutManager(activity, 2)
+        val dataSet = findSimilarPhotos()
+        viewAdapter = SimilarPicturesAdapter(dataSet)
+        recyclerView = similar_photos_recycler.apply {
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_similar_photos, container, false)
-        val photoDisplayOne = view.findViewById<ImageView>(R.id.photoView1)
-        val photoDisplayTwo = view.findViewById<ImageView>(R.id.photoView2)
-        val photoDisplayThree = view.findViewById<ImageView>(R.id.photoView3)
-        val photoDisplayFour = view.findViewById<ImageView>(R.id.photoView4)
-        val photoDisplayFive = view.findViewById<ImageView>(R.id.photoView5)
-        val photoDisplaySix = view.findViewById<ImageView>(R.id.photoView6)
 
-        val imageViewList: ArrayList<ImageView> = arrayListOf(
-            photoDisplayOne,
-            photoDisplayTwo, photoDisplayThree, photoDisplayFour, photoDisplayFive, photoDisplaySix
-        )
-        val similarPhotos = findSimilarPhotos()
-        for (i in 0 until similarPhotos.size) {
-            Picasso.get().load(similarPhotos[i].url).placeholder(R.drawable.loading).error(R.drawable.error_image)
-                .into(imageViewList[i])
-        }
-        return view
+        return inflater.inflate(R.layout.fragment_similar_photos, container, false)
+
     }
 
     private fun findSimilarPhotos(): MutableList<PictureRecord> {

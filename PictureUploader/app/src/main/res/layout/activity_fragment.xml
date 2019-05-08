@@ -24,7 +24,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/roundedbutton"
         android:text="@string/switch_to_detail_frag"
-        android:textColor="@color/textColor"
+        android:textColor="@color/buttonTextColor"
         android:onClick="onChangeCardClicked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
