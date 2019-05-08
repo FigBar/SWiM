@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:onClick=""
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView

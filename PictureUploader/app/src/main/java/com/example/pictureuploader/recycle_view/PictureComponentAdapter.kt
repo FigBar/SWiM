@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +29,11 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
     RecyclerView.Adapter<PictureComponentAdapter.PictureComponentViewHolder>() {
 
     companion object {
-        const val DATA_SET = "DATA_SET"
-        const val INDEX = "INDEX"
+        private var clickListener: ClickListener? = null
+    }
+
+    fun setOnItemClickListener(clickListener: ClickListener) {
+        PictureComponentAdapter.clickListener = clickListener
     }
 
     override fun getItemCount(): Int = dataSet.size
@@ -44,17 +48,9 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
         holder.dateDisplay.text =
             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(dataSet[position].date.time)
         loadPictureAndTags(dataSet[position].url, holder, position)
-        addItemClickListener(holder, position)
+
     }
 
-    private fun addItemClickListener(holder: PictureComponentViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            val fragmentActIntent = Intent(parentContext, FragmentActivity::class.java)
-            fragmentActIntent.putParcelableArrayListExtra(DATA_SET, ArrayList(dataSet))
-            fragmentActIntent.putExtra(INDEX, position)
-            startActivity(parentContext, fragmentActIntent, null)
-        }
-    }
 
     private fun loadPictureAndTags(url: String, holder: PictureComponentViewHolder, position: Int) {
 
@@ -85,7 +81,7 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
             })
     }
 
-    class PictureComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PictureComponentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         var pictureDisplay: ImageView
         var titleDisplay: TextView
@@ -97,8 +93,17 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
             titleDisplay = itemView.findViewById(R.id.title_display)
             dateDisplay = itemView.findViewById(R.id.date_display)
             tagsDisplay = itemView.findViewById(R.id.tags_display)
+
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            clickListener?.onItemClick(adapterPosition, v)
         }
     }
 
+    interface ClickListener {
+        fun onItemClick(position: Int, view: View)
+    }
 
 }

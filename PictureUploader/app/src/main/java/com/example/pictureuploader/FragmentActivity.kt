@@ -29,29 +29,30 @@ class FragmentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fragment)
         fragmentManager = supportFragmentManager
-        val dataSet = intent.getParcelableArrayListExtra<PictureRecord>(PictureComponentAdapter.DATA_SET)
-        val chosenPosition = intent.getIntExtra(PictureComponentAdapter.INDEX, -1)
-        photoFragment = PhotoFragment.newInstance(dataSet[chosenPosition].url)
-        detailFragment = DetailFragment.newInstance(dataSet[chosenPosition])
-        similarPhotosFragment = SimilarPhotosFragment.newInstance(dataSet, chosenPosition)
+        val dataSet = intent.extras?.getParcelableArrayList<PictureRecord>(MainActivity.DATA_SET)
+        val chosenItem = intent.extras?.getParcelable<PictureRecord>(MainActivity.ITEM)
+        photoFragment = PhotoFragment.newInstance(chosenItem!!.url)
+        detailFragment = DetailFragment.newInstance(chosenItem)
+        similarPhotosFragment = SimilarPhotosFragment.newInstance(dataSet!!, chosenItem)
         launchFragments(savedInstanceState)
     }
 
     private fun launchFragments(savedInstanceState: Bundle?) {
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, photoFragment, PHOTO_TAG)
                 .commit()
             fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, detailFragment, DETAILS_TAG)
                 .commit()
-            fragmentManager.beginTransaction().add(R.id.fragment_activity_main_layout, similarPhotosFragment, SIMILARITIES_TAG)
-               .commit()
+            fragmentManager.beginTransaction()
+                .add(R.id.fragment_activity_main_layout, similarPhotosFragment, SIMILARITIES_TAG)
+                .commit()
             hideFragment(detailFragment)
             hideFragment(similarPhotosFragment)
         }
     }
 
     fun onChangeCardClicked(view: View) {
-        fullPhotoMode = if(fullPhotoMode) {
+        fullPhotoMode = if (fullPhotoMode) {
             hideFragment(photoFragment)
             showFragment(detailFragment)
             showFragment(similarPhotosFragment)
@@ -68,7 +69,7 @@ class FragmentActivity : AppCompatActivity() {
         fragmentManager.beginTransaction().hide(fragment).commit()
     }
 
-    private fun showFragment(fragment:Fragment) {
+    private fun showFragment(fragment: Fragment) {
         fragmentManager.beginTransaction().show(fragment).commit()
     }
 }

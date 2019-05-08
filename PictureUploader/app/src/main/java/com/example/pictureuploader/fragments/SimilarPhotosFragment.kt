@@ -16,13 +16,13 @@ class SimilarPhotosFragment : Fragment() {
 
     companion object {
         private const val PICTURE_RECORD_LIST = "picture_record_list"
-        private const val POSITION = "position"
+        private const val ITEM = "item"
 
-        fun newInstance(dataSet: ArrayList<PictureRecord>, position: Int) =
+        fun newInstance(dataSet: ArrayList<PictureRecord>, item: PictureRecord) =
             SimilarPhotosFragment().apply {
                 arguments = Bundle().apply {
                     putParcelableArrayList(PICTURE_RECORD_LIST, dataSet)
-                    putInt(POSITION, position)
+                    putParcelable(ITEM, item)
                 }
             }
 
@@ -55,7 +55,8 @@ class SimilarPhotosFragment : Fragment() {
 
     private fun findSimilarPhotos(): MutableList<PictureRecord> {
         val dataSet = arguments!!.getParcelableArrayList<PictureRecord>(PICTURE_RECORD_LIST)
-        val index = arguments!!.getInt(POSITION)
+        val item = arguments!!.getParcelable<PictureRecord>(ITEM)
+        val index = dataSet.indexOf(item)
         val chosenPicture = dataSet.removeAt(index)
         dataSet!!.sortWith(compareBy { it.assessSimilarity(chosenPicture) })
         return dataSet.takeLast(6).filter { it.assessSimilarity(chosenPicture) != 0 }.toMutableList()
