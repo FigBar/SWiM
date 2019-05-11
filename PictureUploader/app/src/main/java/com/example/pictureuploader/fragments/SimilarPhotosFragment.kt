@@ -38,7 +38,7 @@ class SimilarPhotosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewManager = GridLayoutManager(activity, 2)
+        viewManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val dataSet = findSimilarPhotos()
         viewAdapter = SimilarPicturesAdapter(dataSet)
         recyclerView = similar_photos_recycler.apply {
