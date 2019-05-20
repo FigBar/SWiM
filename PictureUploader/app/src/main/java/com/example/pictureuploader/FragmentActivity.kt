@@ -9,6 +9,7 @@ import com.example.pictureuploader.fragments.DetailFragment
 import com.example.pictureuploader.fragments.PhotoFragment
 import com.example.pictureuploader.fragments.SimilarPhotosFragment
 import com.example.pictureuploader.model.PictureRecord
+import kotlinx.android.synthetic.main.activity_fragment.*
 
 class FragmentActivity : AppCompatActivity() {
 
@@ -55,11 +56,13 @@ class FragmentActivity : AppCompatActivity() {
             hideFragment(photoFragment)
             showFragment(detailFragment)
             showFragment(similarPhotosFragment)
+            switch_button.text = getString(R.string.fullscreen_button)
             false
         } else {
             hideFragment(detailFragment)
             hideFragment(similarPhotosFragment)
             showFragment(photoFragment)
+            switch_button.text = getString(R.string.details_button)
             true
         }
     }

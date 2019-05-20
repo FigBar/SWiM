@@ -1,18 +1,18 @@
 <resources>
     <string name="app_name">PictureUploader</string>
     <string name="add_picture">Add Picture</string>
-    <string name="image_url">Image URL:</string>
+    <string name="image_url">IMAGE URL:</string>
     <string name="provide_image_url">Provide image URL</string>
     <string name="provide_image_title">Provide image title</string>
-    <string name="title">Title:</string>
+    <string name="title">TITLE:</string>
     <string name="add">Add</string>
-    <string name="date">Date:</string>
-    <string name="switch_to_detail_frag">Switch Card</string>
+    <string name="date">DATE:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="photo_frag_desc">Chosen photo from list</string>
-    <string name="detail_frag_title_label">Title:</string>
-    <string name="detail_frag_tags_label">Tags:</string>
-    <string name="detail_frag_date_label">Date:</string>
+    <string name="detail_frag_title_label">TITLE:</string>
+    <string name="detail_frag_tags_label">TAGS:</string>
+    <string name="detail_frag_date_label">DATE:</string>
+    <string name="fullscreen_button">Fullscreen mode</string>
+    <string name="details_button">Details</string>
 </resources>

@@ -93,7 +93,7 @@ class PictureComponentAdapter(private val dataSet: MutableList<PictureRecord>, p
             titleDisplay = itemView.findViewById(R.id.title_display)
             dateDisplay = itemView.findViewById(R.id.date_display)
             tagsDisplay = itemView.findViewById(R.id.tags_display)
-
+            pictureDisplay.clipToOutline = true
             itemView.setOnClickListener(this)
         }
 

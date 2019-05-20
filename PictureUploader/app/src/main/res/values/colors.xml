@@ -6,6 +6,7 @@
     <color name="myPrimary">#EA5455</color>
     <color name="myPrimaryDark">#2D4059</color>
     <color name="myAccent">#FFD460</color>
-    <color name="pictureItemBackground">#FDFFAB</color>
-    <color name="textColor">#FFFFFF</color>
+    <color name="pictureItemBackground">#DEFCFC</color>
+    <color name="textColor">#000000</color>
+    <color name="buttonTextColor">#FFFFFF</color>
 </resources>
