@@ -26,8 +26,6 @@ class GameActivity : AppCompatActivity(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST)
-        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_FASTEST)
         val screenSize = Point()
         windowManager.defaultDisplay.getSize(screenSize)
         gameView = GameView(this, screenSize.y.toFloat(), screenSize.x.toFloat())
@@ -57,6 +55,8 @@ class GameActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST)
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_FASTEST)
         gameView.resume()
 
     }
