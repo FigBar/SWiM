@@ -48,7 +48,6 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
     private fun draw() {
         if (surfaceHolder.surface.isValid) {
             canvas = surfaceHolder.lockCanvas()
-            canvas.drawColor(Color.BLACK)
             canvas.drawColor(ContextCompat.getColor(context, R.color.skyColor))
             drawInteractableElements(backgroundElements)
             drawPlayer()
