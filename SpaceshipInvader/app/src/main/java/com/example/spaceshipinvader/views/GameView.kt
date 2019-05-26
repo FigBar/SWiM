@@ -10,13 +10,25 @@ import com.example.spaceshipinvader.model.Player
 
 class GameView(context: Context, private val maxX: Float, private val maxY: Float) : SurfaceView(context), Runnable {
 
+    companion object {
+        private const val SLEEP_FACTOR = 17
+        private const val LIGHT_INTENSITY_CLASSIFIER = 150
+        private const val COINS_AMOUNT = 6
+        private const val GHOSTS_AMOUNT = 10
+        private const val BACKGROUND_ELEMS_AMOUNT = 5
+        private const val SCORE_LIVES_TEXT_SIZE = 60f
+        private const val GAME_OVER_TEXT_SIZE = 150f
+        private const val YOUR_SCORE_TEXT_SIZE = 100f
+    }
+
     private val paint = Paint()
     private lateinit var canvas: Canvas
     private val surfaceHolder = holder
 
     private var collisionCounter = 3
     var pointsCounter = 0
-    private var isGameOver = false
+    var isGameOver = false
+        private set
 
     @Volatile
     internal var currentlyPlaying: Boolean = false
@@ -51,19 +63,21 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
     }
 
     private fun drawGameOver() {
-        paint.color = Color.WHITE
-        paint.textSize = 150f
+        paint.color = Color.BLACK
+        paint.textSize = GAME_OVER_TEXT_SIZE
         paint.textAlign = Paint.Align.CENTER
         val y = (canvas.height / 2) - ((paint.descent() + paint.ascent()) / 2)
         canvas.drawText("GAME OVER", canvas.width / 2f, y, paint)
+        paint.textSize = YOUR_SCORE_TEXT_SIZE
+        canvas.drawText("SCORE: $pointsCounter", canvas.width / 2f, y + 200, paint)
 
     }
 
     private fun drawScoreAndLives() {
         paint.color = Color.WHITE
-        paint.textSize = 60f
+        paint.textSize = SCORE_LIVES_TEXT_SIZE
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("Score: $pointsCounter", 200f, 60f, paint)
+        canvas.drawText("Score: $pointsCounter", 200f,  60f, paint)
         canvas.drawText("Lives: $collisionCounter", 500f, 60f, paint)
     }
 
@@ -96,7 +110,7 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
     }
 
     private fun generateCoins() {
-        for (i in 0..6) {
+        for (i in 0..COINS_AMOUNT) {
             coinList.add(
                 InteractableElement(
                     maxX,
@@ -108,7 +122,7 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
     }
 
     private fun generateMonsterList() {
-        for (i in 0..10) {
+        for (i in 0..GHOSTS_AMOUNT) {
             ghostList.add(
                 InteractableElement(
                     maxX,
@@ -120,7 +134,7 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
     }
 
     private fun generateBackgroundElements() {
-        for (i in 0..5) {
+        for (i in 0..BACKGROUND_ELEMS_AMOUNT) {
             backgroundElements.add(
                 InteractableElement(
                     maxX,
@@ -134,7 +148,7 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
 
     fun reactToLightChange(lumens: Float) {
         try {
-            if (lumens < 150) {
+            if (lumens < LIGHT_INTENSITY_CLASSIFIER) {
                 ghostList.forEach {
                     it.avatar = BitmapFactory.decodeResource(context.resources, R.drawable.light_changed_ghost_icon)
                 }
@@ -175,7 +189,7 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
 
     private fun control() {
         try {
-            Thread.sleep(17)
+            Thread.sleep(SLEEP_FACTOR.toLong())
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
