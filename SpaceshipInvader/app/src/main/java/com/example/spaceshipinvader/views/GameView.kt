@@ -173,7 +173,8 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
             }
 
         }
-        if (collisionCounter == 0) {
+        if (collisionCounter <= 0) {
+            collisionCounter = 0
             currentlyPlaying = false
             isGameOver = true
         }
