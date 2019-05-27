@@ -34,6 +34,9 @@ class GameActivity : AppCompatActivity(), SensorEventListener {
         windowManager.defaultDisplay.getSize(screenSize)
         gameView = GameView(this, screenSize.y.toFloat(), screenSize.x.toFloat())
         setContentView(gameView)
+        gameView.setOnClickListener {
+             gameView.reload()
+        }
     }
 
 
