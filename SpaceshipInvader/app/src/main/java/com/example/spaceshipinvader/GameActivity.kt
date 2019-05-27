@@ -9,7 +9,10 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import com.example.spaceshipinvader.views.GameView
+import kotlinx.android.synthetic.main.activity_game.*
 
 class GameActivity : AppCompatActivity(), SensorEventListener {
 
@@ -22,12 +25,11 @@ class GameActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST)
-        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_FASTEST)
         val screenSize = Point()
         windowManager.defaultDisplay.getSize(screenSize)
         gameView = GameView(this, screenSize.y.toFloat(), screenSize.x.toFloat())
@@ -57,6 +59,8 @@ class GameActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onResume() {
         super.onResume()
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST)
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_FASTEST)
         gameView.resume()
 
     }
