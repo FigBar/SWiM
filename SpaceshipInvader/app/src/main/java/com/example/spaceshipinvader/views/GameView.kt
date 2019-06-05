@@ -2,7 +2,9 @@ package com.example.spaceshipinvader.views
 
 import android.content.Context
 import android.graphics.*
+import android.view.MotionEvent
 import android.view.SurfaceView
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.spaceshipinvader.R
 import com.example.spaceshipinvader.model.InteractableElement
@@ -11,7 +13,7 @@ import com.example.spaceshipinvader.model.Player
 class GameView(context: Context, private val maxX: Float, private val maxY: Float) : SurfaceView(context), Runnable {
 
     companion object {
-        private const val SLEEP_FACTOR = 17
+        private const val SLEEP_FACTOR = 15
         private const val LIGHT_INTENSITY_CLASSIFIER = 150
         private const val COINS_AMOUNT = 6
         private const val GHOSTS_AMOUNT = 10
@@ -68,7 +70,8 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
         val y = (canvas.height / 2) - ((paint.descent() + paint.ascent()) / 2)
         canvas.drawText("GAME OVER", canvas.width / 2f, y, paint)
         paint.textSize = YOUR_SCORE_TEXT_SIZE
-        canvas.drawText("SCORE: $pointsCounter", canvas.width / 2f, y + 200, paint)
+        canvas.drawText("SCORE: $pointsCounter", canvas.width / 2f, y + 100, paint)
+        canvas.drawText("Tap to try again!", canvas.width / 2f, y + 250, paint)
 
     }
 
@@ -170,7 +173,8 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
             }
 
         }
-        if (collisionCounter == 0) {
+        if (collisionCounter <= 0) {
+            collisionCounter = 0
             currentlyPlaying = false
             isGameOver = true
         }
@@ -193,6 +197,18 @@ class GameView(context: Context, private val maxX: Float, private val maxY: Floa
             e.printStackTrace()
         }
 
+    }
+
+    fun reload() {
+        if(isGameOver) {
+            isGameOver = false
+            collisionCounter = 3
+            pointsCounter = 0
+            coinList.forEach { it.elementKill() }
+            ghostList.forEach { it.elementKill() }
+            backgroundElements.forEach { it.elementKill() }
+            resume()
+        }
     }
 
     fun updatePlayerCoordinates(newX: Float, newY: Float) {

@@ -48,7 +48,7 @@ class InteractableElement(maxScreenX: Float, maxScreenY: Float, var avatar: Bitm
     }
 
     fun elementKill() {
-        motionSpeed = randomizer.nextInt(KILL_SPEED_RANGE) + SPEED_OFFSET
+        motionSpeed = randomizer.nextInt(SPEED_RANGE) + SPEED_OFFSET
         xCoordinate = randomizer.nextInt(maxX.toInt()).toFloat()
         yCoordinate = maxY + KILL_Y_AXIS_OFFSET_RANGE
     }
