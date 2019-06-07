@@ -1,10 +1,12 @@
 package com.example.musicplayer
 
 import android.Manifest
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +14,11 @@ import com.example.musicplayer.model.MusicRecord
 import com.example.musicplayer.recycler_view.MusicRecordAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MusicRecordAdapter.ClickListener {
+
+    companion object {
+        const val TRACK = "track"
+    }
 
     private var musicRecordsList: MutableList<MusicRecord> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
@@ -32,6 +38,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onItemClick(position: Int) {
+        val playerIntent = Intent(this@MainActivity, PlayerActivity::class.java)
+        val fragBundle = Bundle()
+        fragBundle.putParcelable(TRACK, musicRecordsList[position])
+        playerIntent.putExtras(fragBundle)
+        startActivity(playerIntent)
+    }
 
 
     private fun loadMusicRecords() {
