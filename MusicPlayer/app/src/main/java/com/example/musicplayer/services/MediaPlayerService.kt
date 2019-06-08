@@ -2,6 +2,7 @@ package com.example.musicplayer.services
 
 import android.media.MediaPlayer
 import android.widget.SeekBar
+import com.example.musicplayer.PlayerActivity
 import com.example.musicplayer.recycler_view.MusicRecordAdapter
 import com.example.musicplayer.repositories.MusicTracksRepository
 
@@ -21,9 +22,11 @@ object MediaPlayerService {
 
     }
 
-    private fun onCompletion(index: Int) {
+    fun onCompletion(index: Int, player: PlayerActivity) {
         val nextTrackIndex = (index + 1) % MusicTracksRepository.musicRecordsList.size
-        changeTrack(nextTrackIndex)
+        player.currentTrackNumber += 1
+        changeTrack(nextTrackIndex, player)
+        player.prepareNewSong()
     }
 
     private fun onCompletion(index: Int, adapter: MusicRecordAdapter) {
@@ -31,10 +34,10 @@ object MediaPlayerService {
         changeTrack(nextTrackIndex, adapter)
     }
 
-    fun changeTrack(index: Int) {
+    fun changeTrack(index: Int, player: PlayerActivity) {
         setUpMediaPlayer(index)
         mediaPlayer.setOnPreparedListener { playMusic() }
-        mediaPlayer.setOnCompletionListener { onCompletion(index) }
+        mediaPlayer.setOnCompletionListener { onCompletion(index, player) }
         mediaPlayer.prepareAsync()
     }
 

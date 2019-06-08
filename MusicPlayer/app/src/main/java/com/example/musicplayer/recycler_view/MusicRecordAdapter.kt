@@ -18,6 +18,7 @@ import com.example.musicplayer.PlayerActivity
 import com.example.musicplayer.R
 import com.example.musicplayer.repositories.MusicTracksRepository
 import com.example.musicplayer.services.MediaPlayerService
+import kotlinx.android.parcel.Parcelize
 
 
 class MusicRecordAdapter :

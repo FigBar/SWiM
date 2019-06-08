@@ -71,9 +71,4 @@ class MainActivity : AppCompatActivity() {
         val adapter = recyclerView.adapter as MusicRecordAdapter
         adapter.updateCurrentTrack()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        MediaPlayerService.mediaPlayer.release()
-    }
 }

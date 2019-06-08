@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_player.*
 class PlayerActivity : AppCompatActivity() {
 
     private val musicRepository = MusicTracksRepository
-    private var currentTrackNumber = -1
+    var currentTrackNumber = -1
     private lateinit var currentTrack: MusicRecord
     private val handler = Handler()
     private lateinit var runnable: Runnable
@@ -28,8 +28,16 @@ class PlayerActivity : AppCompatActivity() {
         loadLayoutElements()
         modifySeekBar()
         updatePlayPauseButtonIcon()
+        MediaPlayerService.mediaPlayer.setOnCompletionListener {
+            MediaPlayerService.onCompletion(currentTrackNumber, this)
+        }
     }
 
+    fun prepareNewSong() {
+        loadLayoutElements()
+        modifySeekBar()
+        updatePlayPauseButtonIcon()
+    }
 
     private fun convertTime(milis: Int): String {
         var sec = milis/1000
@@ -63,8 +71,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun onNextClicked(view: View) {
-        currentTrackNumber = (currentTrackNumber + 1)  % musicRepository.musicRecordsList.size
-        MediaPlayerService.changeTrack(currentTrackNumber)
+        currentTrackNumber = (currentTrackNumber + 1) % musicRepository.musicRecordsList.size
+        MediaPlayerService.changeTrack(currentTrackNumber, this)
         loadLayoutElements()
         modifySeekBar()
         play_pause_button.setImageResource(R.drawable.pause)
@@ -73,7 +81,7 @@ class PlayerActivity : AppCompatActivity() {
     fun onBackClicked(view: View) {
         currentTrackNumber -= 1
         if(currentTrackNumber < 0) currentTrackNumber = musicRepository.musicRecordsList.size - 1
-        MediaPlayerService.changeTrack(currentTrackNumber)
+        MediaPlayerService.changeTrack(currentTrackNumber, this)
         loadLayoutElements()
         modifySeekBar()
         play_pause_button.setImageResource(R.drawable.pause)
@@ -106,7 +114,6 @@ class PlayerActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(fromUser){
                     MediaPlayerService.mediaPlayer.seekTo(progress)
-                    //modifySeekBar()
                 }
             }
 
