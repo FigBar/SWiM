@@ -14,11 +14,8 @@ import com.example.musicplayer.recycler_view.MusicRecordAdapter
 import com.example.musicplayer.repositories.MusicTracksRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MusicRecordAdapter.ClickListener {
+class MainActivity : AppCompatActivity() {
 
-    companion object {
-        const val TRACK_NUMBER = "track_number"
-    }
 
     private val musicRepository = MusicTracksRepository
     private lateinit var recyclerView: RecyclerView
@@ -31,21 +28,12 @@ class MainActivity : AppCompatActivity(), MusicRecordAdapter.ClickListener {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         loadMusicRecords()
         viewManager = LinearLayoutManager(this)
-        viewAdapter = MusicRecordAdapter(musicRepository.musicRecordsList, this)
+        viewAdapter = MusicRecordAdapter()
         recyclerView = main_recycler_view.apply {
             layoutManager = viewManager
             adapter = viewAdapter
         }
     }
-
-    override fun onItemClick(position: Int) {
-        val playerIntent = Intent(this@MainActivity, PlayerActivity::class.java)
-        val fragBundle = Bundle()
-        fragBundle.putInt(TRACK_NUMBER, position)
-        playerIntent.putExtras(fragBundle)
-        startActivity(playerIntent)
-    }
-
 
     private fun loadMusicRecords() {
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -73,5 +61,11 @@ class MainActivity : AppCompatActivity(), MusicRecordAdapter.ClickListener {
             }
             cursor.close()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val adapter = recyclerView.adapter as MusicRecordAdapter
+        adapter.updateCurrentTrack()
     }
 }

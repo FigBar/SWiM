@@ -2,69 +2,111 @@ package com.example.musicplayer
 
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.SeekBar
 import com.example.musicplayer.model.MusicRecord
+import com.example.musicplayer.recycler_view.MusicRecordAdapter
 import com.example.musicplayer.repositories.MusicTracksRepository
+import com.example.musicplayer.services.MediaPlayerService
 import kotlinx.android.synthetic.main.activity_player.*
 
-class PlayerActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+class PlayerActivity : AppCompatActivity() {
 
     private val musicRepository = MusicTracksRepository
-    private var currentTrack: MusicRecord? = null
-    private var currentTrackNumber = 0
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
-    private var resumePosition: Int = 0
+    private var currentTrackNumber = -1
+    private lateinit var currentTrack: MusicRecord
     private val handler = Handler()
     private lateinit var runnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-        currentTrackNumber = intent?.extras!!.getInt(MainActivity.TRACK_NUMBER)
-        setPlayedTrack()
+        currentTrackNumber = intent?.extras!!.getInt(MusicRecordAdapter.TRACK_NUMBER)
+        loadLayoutElements()
+        modifySeekBar()
+        updatePlayPauseButtonIcon()
     }
 
-    private fun setPlayedTrack() {
-        currentTrack = musicRepository.musicRecordsList[currentTrackNumber]
-        loadTrackInfo()
-        setUpMediaPlayer()
-        play_pause_button.setImageResource(R.drawable.pause)
+
+    private fun convertTime(milis: Int): String {
+        var sec = milis/1000
+        val min = sec/60
+        sec %= 60
+        if(sec < 10) return "$min:0$sec"
+        return "$min:$sec"
     }
 
-    private fun setUpMediaPlayer() {
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(currentTrack?.path)
-        mediaPlayer.setOnPreparedListener(this)
-        mediaPlayer.setOnCompletionListener(this)
-        mediaPlayer.prepareAsync()
-    }
 
-    override fun onCompletion(mp: MediaPlayer?) {
-        stopMusic()
-        if (currentTrackNumber + 1 <= musicRepository.musicRecordsList.size - 1) {
-            currentTrackNumber += 1
-            setPlayedTrack()
+
+
+    private fun updatePlayPauseButtonIcon(){
+        if (MediaPlayerService.mediaPlayer.isPlaying) {
+            play_pause_button.setImageResource(R.drawable.pause)
+        } else {
+            play_pause_button.setImageResource(R.drawable.play)
         }
     }
 
-    override fun onPrepared(mp: MediaPlayer?) {
-        player_seekBar.max = mediaPlayer.duration
-        track_length_display.text = convertTime(mediaPlayer.duration)
-        setSeekBarChangedListener()
-        playMusic()
+    fun onPlayPauseClicked(view: View) {
+        if (MediaPlayerService.mediaPlayer.isPlaying) {
+            MediaPlayerService.isPlaying = false
+            MediaPlayerService.pauseMusic()
+        } else {
+            MediaPlayerService.isPlaying = true
+            MediaPlayerService.resumeMusic(player_seekBar)
+            modifySeekBar()
+        }
+        updatePlayPauseButtonIcon()
+    }
+
+    fun onNextClicked(view: View) {
+        currentTrackNumber = (currentTrackNumber + 1)  % musicRepository.musicRecordsList.size
+        MediaPlayerService.changeTrack(currentTrackNumber)
+        loadLayoutElements()
         modifySeekBar()
+        play_pause_button.setImageResource(R.drawable.pause)
+    }
+
+    fun onBackClicked(view: View) {
+        currentTrackNumber -= 1
+        if(currentTrackNumber < 0) currentTrackNumber = musicRepository.musicRecordsList.size - 1
+        MediaPlayerService.changeTrack(currentTrackNumber)
+        loadLayoutElements()
+        modifySeekBar()
+        play_pause_button.setImageResource(R.drawable.pause)
+    }
+
+    private fun loadLayoutElements(){
+        currentTrack = MusicTracksRepository.musicRecordsList[currentTrackNumber]
+        loadTrackInfo()
+        track_length_display.text = convertTime(MediaPlayerService.mediaPlayer.duration)
+        player_seekBar.max = MediaPlayerService.mediaPlayer.duration
+        setSeekBarChangedListener()
+    }
+
+    private fun loadTrackInfo() {
+        val dataRetriever = MediaMetadataRetriever()
+        dataRetriever.setDataSource(currentTrack.path)
+        val cover = dataRetriever.embeddedPicture
+        if (cover != null) {
+            val coverImage = BitmapFactory.decodeByteArray(cover, 0, cover.size)
+            player_cover_display.setImageBitmap(coverImage)
+        } else {
+            player_cover_display.setImageResource(R.drawable.cover_failed)
+        }
+        player_title_display.text = currentTrack.title
+        player_artist_display.text = currentTrack.artist
     }
 
     private fun setSeekBarChangedListener() {
         player_seekBar.setOnSeekBarChangeListener( object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(fromUser){
-                    mediaPlayer.seekTo(progress)
+                    MediaPlayerService.mediaPlayer.seekTo(progress)
+                    //modifySeekBar()
                 }
             }
 
@@ -78,18 +120,10 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener, Medi
         })
     }
 
-    private fun convertTime(milis: Int): String {
-        var sec = milis/1000
-        val min = sec/60
-        sec %= 60
-        if(sec < 10) return "$min:0$sec"
-        return "$min:$sec"
-    }
-
     private fun modifySeekBar() {
-        player_seekBar.progress = mediaPlayer.currentPosition
-        current_time_display.text = convertTime(mediaPlayer.currentPosition)
-        if(mediaPlayer.isPlaying){
+        player_seekBar.progress = MediaPlayerService.mediaPlayer.currentPosition
+        current_time_display.text = convertTime(MediaPlayerService.mediaPlayer.currentPosition)
+        if(MediaPlayerService.mediaPlayer.isPlaying){
             runnable = Runnable{
                 runOnUiThread {
                     modifySeekBar()
@@ -97,82 +131,6 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener, Medi
             }
             handler.postDelayed(runnable, 1000)
         }
-    }
-
-    private fun playMusic() {
-        if (!mediaPlayer.isPlaying) {
-            mediaPlayer.start()
-        }
-    }
-
-    private fun stopMusic() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-        }
-    }
-
-    private fun pauseMusic() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-            resumePosition = mediaPlayer.currentPosition
-        }
-    }
-
-    private fun resumeMusic() {
-        if (!mediaPlayer.isPlaying) {
-            mediaPlayer.seekTo(resumePosition)
-            mediaPlayer.start()
-        }
-    }
-
-    fun onPlayPauseClicked(view: View) {
-        if (mediaPlayer.isPlaying) {
-            pauseMusic()
-            play_pause_button.setImageResource(R.drawable.play)
-        } else {
-            resumeMusic()
-            modifySeekBar()
-            play_pause_button.setImageResource(R.drawable.pause)
-        }
-
-    }
-
-    fun onNextClicked(view: View) {
-        if (currentTrackNumber + 1 <= musicRepository.musicRecordsList.size - 1) {
-            currentTrackNumber += 1
-            setPlayedTrack()
-        }
-    }
-
-    fun onBackClicked(view: View) {
-        if (currentTrackNumber - 1 >= 0) {
-            currentTrackNumber -= 1
-            setPlayedTrack()
-        }
-    }
-
-    private fun loadTrackInfo() {
-        val dataRetriever = MediaMetadataRetriever()
-        dataRetriever.setDataSource(currentTrack?.path)
-        val cover = dataRetriever.embeddedPicture
-        if (cover != null) {
-            val coverImage = BitmapFactory.decodeByteArray(cover, 0, cover.size)
-            player_cover_display.setImageBitmap(coverImage)
-        } else {
-            player_cover_display.setImageResource(R.drawable.cover_failed)
-        }
-        player_title_display.text = currentTrack?.title
-        player_artist_display.text = currentTrack?.artist
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setUpMediaPlayer()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopMusic()
     }
 
 }
