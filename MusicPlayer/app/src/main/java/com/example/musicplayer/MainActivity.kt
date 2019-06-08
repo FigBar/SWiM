@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.model.MusicRecord
 import com.example.musicplayer.recycler_view.MusicRecordAdapter
 import com.example.musicplayer.repositories.MusicTracksRepository
+import com.example.musicplayer.services.MediaPlayerService
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         val projection = arrayOf(
             MediaStore.Audio.AudioColumns.DATA,
             MediaStore.Audio.AudioColumns.TITLE,
-            MediaStore.Audio.AudioColumns.ARTIST
+            MediaStore.Audio.AudioColumns.ARTIST,
+            MediaStore.Audio.AudioColumns.DURATION
         )
         val cursor = contentResolver.query(
             uri,
@@ -54,10 +56,11 @@ class MainActivity : AppCompatActivity() {
                 val path = cursor.getString(0)
                 val title = cursor.getString(1)
                 val artist = cursor.getString(2)
+                val duration = cursor.getInt(3)
                 Log.d("path", "path : $path")
                 Log.d("name", "name : $title")
                 Log.d("artist", "artist: $artist")
-                musicRepository.musicRecordsList.add(MusicRecord(path, title, artist))
+                musicRepository.musicRecordsList.add(MusicRecord(path, title, artist, duration))
             }
             cursor.close()
         }
@@ -67,5 +70,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         val adapter = recyclerView.adapter as MusicRecordAdapter
         adapter.updateCurrentTrack()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MediaPlayerService.mediaPlayer.release()
     }
 }

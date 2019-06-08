@@ -82,8 +82,8 @@ class PlayerActivity : AppCompatActivity() {
     private fun loadLayoutElements(){
         currentTrack = MusicTracksRepository.musicRecordsList[currentTrackNumber]
         loadTrackInfo()
-        track_length_display.text = convertTime(MediaPlayerService.mediaPlayer.duration)
-        player_seekBar.max = MediaPlayerService.mediaPlayer.duration
+        track_length_display.text = convertTime(currentTrack.duration)
+        player_seekBar.max = currentTrack.duration
         setSeekBarChangedListener()
     }
 

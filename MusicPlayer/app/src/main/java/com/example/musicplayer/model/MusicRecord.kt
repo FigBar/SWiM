@@ -5,4 +5,4 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class MusicRecord(val path: String, val title: String, val artist: String) : Parcelable
+data class MusicRecord(val path: String, val title: String, val artist: String, val duration: Int) : Parcelable
