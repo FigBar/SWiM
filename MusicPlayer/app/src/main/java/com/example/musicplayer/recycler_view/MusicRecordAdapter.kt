@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.PlayerActivity
 import com.example.musicplayer.R
@@ -21,7 +22,7 @@ import com.example.musicplayer.services.MediaPlayerService
 import kotlinx.android.parcel.Parcelize
 
 
-class MusicRecordAdapter :
+class MusicRecordAdapter(private val layoutManager: RecyclerView.LayoutManager) :
     RecyclerView.Adapter<MusicRecordAdapter.PictureRecordViewHolder>() {
 
     companion object {
@@ -34,6 +35,7 @@ class MusicRecordAdapter :
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.song_card_layout, parent, false)
         return PictureRecordViewHolder(itemView)
     }
+
 
     override fun onBindViewHolder(holder: PictureRecordViewHolder, position: Int) {
         loadAlbumCover(MusicTracksRepository.musicRecordsList[position].path, holder.songArtDisplay)
@@ -97,6 +99,7 @@ class MusicRecordAdapter :
 
     fun updateCurrentTrack(){
         notifyDataSetChanged()
+        layoutManager.scrollToPosition(MediaPlayerService.currentlyPlaying)
     }
 
     class PictureRecordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

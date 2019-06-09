@@ -12,6 +12,12 @@ object MediaPlayerService {
     var mediaPlayer = MediaPlayer()
     var currentlyPlaying = -1
     var isPlaying = false
+    private lateinit var musicRecordAdapter: MusicRecordAdapter
+
+    fun setMusicRecordAdapter(adapter: MusicRecordAdapter) {
+        this.musicRecordAdapter = adapter
+
+    }
 
     private fun setUpMediaPlayer(trackIndex: Int) {
         currentlyPlaying = trackIndex
@@ -36,7 +42,10 @@ object MediaPlayerService {
 
     fun changeTrack(index: Int, player: PlayerActivity) {
         setUpMediaPlayer(index)
-        mediaPlayer.setOnPreparedListener { playMusic() }
+        mediaPlayer.setOnPreparedListener {
+            playMusic()
+            musicRecordAdapter.updateCurrentTrack()
+        }
         mediaPlayer.setOnCompletionListener { onCompletion(index, player) }
         mediaPlayer.prepareAsync()
     }

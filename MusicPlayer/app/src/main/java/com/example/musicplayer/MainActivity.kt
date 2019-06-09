@@ -29,11 +29,12 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         loadMusicRecords()
         viewManager = LinearLayoutManager(this)
-        viewAdapter = MusicRecordAdapter()
+        viewAdapter = MusicRecordAdapter(viewManager)
         recyclerView = main_recycler_view.apply {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+        MediaPlayerService.setMusicRecordAdapter(viewAdapter)
     }
 
     private fun loadMusicRecords() {
