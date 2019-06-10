@@ -24,6 +24,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+        supportActionBar!!.hide()
         currentTrackNumber = intent?.extras!!.getInt(MusicRecordAdapter.TRACK_NUMBER)
         loadLayoutElements()
         modifySeekBar()
@@ -40,17 +41,15 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun convertTime(milis: Int): String {
-        var sec = milis/1000
-        val min = sec/60
+        var sec = milis / 1000
+        val min = sec / 60
         sec %= 60
-        if(sec < 10) return "$min:0$sec"
+        if (sec < 10) return "$min:0$sec"
         return "$min:$sec"
     }
 
 
-
-
-    private fun updatePlayPauseButtonIcon(){
+    private fun updatePlayPauseButtonIcon() {
         if (MediaPlayerService.mediaPlayer.isPlaying) {
             play_pause_button.setImageResource(R.drawable.pause)
         } else {
@@ -74,20 +73,18 @@ class PlayerActivity : AppCompatActivity() {
         currentTrackNumber = (currentTrackNumber + 1) % musicRepository.musicRecordsList.size
         MediaPlayerService.changeTrack(currentTrackNumber, this)
         loadLayoutElements()
-        modifySeekBar()
         play_pause_button.setImageResource(R.drawable.pause)
     }
 
     fun onBackClicked(view: View) {
         currentTrackNumber -= 1
-        if(currentTrackNumber < 0) currentTrackNumber = musicRepository.musicRecordsList.size - 1
+        if (currentTrackNumber < 0) currentTrackNumber = musicRepository.musicRecordsList.size - 1
         MediaPlayerService.changeTrack(currentTrackNumber, this)
         loadLayoutElements()
-        modifySeekBar()
         play_pause_button.setImageResource(R.drawable.pause)
     }
 
-    private fun loadLayoutElements(){
+    private fun loadLayoutElements() {
         currentTrack = MusicTracksRepository.musicRecordsList[currentTrackNumber]
         loadTrackInfo()
         track_length_display.text = convertTime(currentTrack.duration)
@@ -103,16 +100,16 @@ class PlayerActivity : AppCompatActivity() {
             val coverImage = BitmapFactory.decodeByteArray(cover, 0, cover.size)
             player_cover_display.setImageBitmap(coverImage)
         } else {
-            player_cover_display.setImageResource(R.drawable.cover_failed)
+            player_cover_display.setImageResource(R.drawable.cover_failed_512)
         }
         player_title_display.text = currentTrack.title
         player_artist_display.text = currentTrack.artist
     }
 
     private fun setSeekBarChangedListener() {
-        player_seekBar.setOnSeekBarChangeListener( object: SeekBar.OnSeekBarChangeListener {
+        player_seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(fromUser){
+                if (fromUser) {
                     MediaPlayerService.mediaPlayer.seekTo(progress)
                 }
             }
@@ -127,11 +124,12 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
-    private fun modifySeekBar() {
+    fun modifySeekBar() {
         player_seekBar.progress = MediaPlayerService.mediaPlayer.currentPosition
         current_time_display.text = convertTime(MediaPlayerService.mediaPlayer.currentPosition)
-        if(MediaPlayerService.mediaPlayer.isPlaying){
-            runnable = Runnable{
+
+        if (MediaPlayerService.mediaPlayer.isPlaying) {
+            runnable = Runnable {
                 runOnUiThread {
                     modifySeekBar()
                 }

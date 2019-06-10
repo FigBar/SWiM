@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +12,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicplayer.PlayerActivity
 import com.example.musicplayer.R
 import com.example.musicplayer.repositories.MusicTracksRepository
 import com.example.musicplayer.services.MediaPlayerService
-import kotlinx.android.parcel.Parcelize
 
 
 class MusicRecordAdapter(private val layoutManager: RecyclerView.LayoutManager) :
@@ -54,9 +51,9 @@ class MusicRecordAdapter(private val layoutManager: RecyclerView.LayoutManager) 
         if (MediaPlayerService.currentlyPlaying == position) {
             holder.playButton.visibility = View.VISIBLE
             if (MediaPlayerService.mediaPlayer.isPlaying)
-                holder.playButton.setImageResource(R.drawable.pause_24)
+                holder.playButton.setImageResource(R.drawable.pause_small)
             else
-                holder.playButton.setImageResource(R.drawable.play_24)
+                holder.playButton.setImageResource(R.drawable.play_small)
             holder.playButton.setOnClickListener { onPlayPauseClicked(holder) }
         } else {
             holder.playButton.visibility = View.INVISIBLE
@@ -67,11 +64,11 @@ class MusicRecordAdapter(private val layoutManager: RecyclerView.LayoutManager) 
         if (MediaPlayerService.mediaPlayer.isPlaying) {
             MediaPlayerService.isPlaying = false
             MediaPlayerService.pauseMusic()
-            holder.playButton.setImageResource(R.drawable.play_24)
+            holder.playButton.setImageResource(R.drawable.play_small)
         } else {
             MediaPlayerService.isPlaying = true
             MediaPlayerService.playMusic()
-            holder.playButton.setImageResource(R.drawable.pause_24)
+            holder.playButton.setImageResource(R.drawable.pause_small)
         }
     }
 

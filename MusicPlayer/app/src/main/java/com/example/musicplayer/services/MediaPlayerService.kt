@@ -44,6 +44,7 @@ object MediaPlayerService {
         setUpMediaPlayer(index)
         mediaPlayer.setOnPreparedListener {
             playMusic()
+            player.modifySeekBar()
             musicRecordAdapter.updateCurrentTrack()
         }
         mediaPlayer.setOnCompletionListener { onCompletion(index, player) }
@@ -64,12 +65,6 @@ object MediaPlayerService {
     fun playMusic() {
         if (!mediaPlayer.isPlaying) {
             mediaPlayer.start()
-        }
-    }
-
-    private fun stopMusic() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
         }
     }
 

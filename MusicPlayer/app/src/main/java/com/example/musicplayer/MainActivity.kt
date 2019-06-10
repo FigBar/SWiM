@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
+        recyclerView.setHasFixedSize(true)
+        recyclerView.setItemViewCacheSize(100)
         MediaPlayerService.setMusicRecordAdapter(viewAdapter)
     }
 
